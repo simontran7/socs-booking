@@ -190,16 +190,16 @@ img {
 
 /* Tablet */
 @media (max-width: 900px) {
-  .hero {
+  .home-title {
     grid-template-columns: 1fr;
   }
 
-  .hero-image {
+  .home-image {
     order: -1;
     min-height: 300px;
   }
 
-  .hero-text {
+  .home-text {
     padding: 28px 20px 24px 20px;
   }
 
@@ -238,19 +238,19 @@ img {
     font-size: 16px;
   }
 
-  .hero-text {
+  .home-text {
     padding: 22px 16px;
   }
 
-  .hero-text p {
+  .home-text p {
     max-width: 100%;
   }
 
-  .hero-buttons {
+  .home-buttons {
     flex-direction: column;
   }
 
-  .hero-buttons button {
+  .home-buttons button {
     width: 100%;
     min-width: 0;
   }
