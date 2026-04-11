@@ -1,0 +1,271 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #dcdcdc;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.page {
+  min-height: 100vh;
+  background-color: #dcdcdc;
+  padding: 12px;
+}
+
+.page-container {
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid #cfcfcf;
+}
+
+.navbar {
+  min-height: 76px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 26px;
+  border-bottom: 1px solid #d9d9d9;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.navbar-logo {
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+}
+
+.navbar-title {
+  font-size: 20px;
+  color: #7b7b7b;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #111111;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.home-title {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 475px;
+}
+
+.home-text {
+  padding: 32px 28px 24px 20px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.home-text h1 {
+  margin: 0;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  line-height: 1.2;
+  font-weight: 800;
+  color: #000000;
+}
+
+.red-text {
+  color: #d61f2c;
+}
+
+.home-text p {
+  margin-top: 18px;
+  margin-bottom: 18px;
+  font-size: clamp(1rem, 2vw, 1.7rem);
+  line-height: 1.35;
+  color: #222222;
+  max-width: 430px;
+}
+
+.home-buttons {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.home-buttons button {
+  min-width: 170px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 1px solid #bdbdbd;
+  background-color: #ffffff;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.home-image {
+  background-color: #f3f3f3;
+  min-height: 320px;
+}
+
+.home-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.features-section {
+  background-color: #dedede;
+  padding: 12px 24px 24px 24px;
+}
+
+.features-section h2 {
+  margin: 0 0 18px 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111111;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.feature-card {
+  background-color: #f7f7f7;
+  border-radius: 14px;
+  min-height: 196px;
+  padding: 14px;
+}
+
+.feature-number {
+  font-size: 44px;
+  font-weight: 800;
+  color: #b4b4b4;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.feature-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1b1b1b;
+  margin-bottom: 8px;
+}
+
+.feature-card p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.35;
+  color: #8e8e8e;
+}
+
+.footer {
+  background-color: #f8f8f8;
+  border-top: 1px solid #d9d9d9;
+  padding: 12px 30px;
+  font-size: 15px;
+  color: #8c8c8c;
+}
+
+/* Tablet */
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-image {
+    order: -1;
+    min-height: 300px;
+  }
+
+  .hero-text {
+    padding: 28px 20px 24px 20px;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .page {
+    padding: 6px;
+  }
+
+  .navbar {
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-left {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .navbar-title {
+    font-size: 18px;
+    white-space: normal;
+  }
+
+  .navbar-links {
+    gap: 18px;
+  }
+
+  .navbar-links a {
+    font-size: 16px;
+  }
+
+  .hero-text {
+    padding: 22px 16px;
+  }
+
+  .hero-text p {
+    max-width: 100%;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+  }
+
+  .hero-buttons button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .features-section {
+    padding: 12px 16px 20px 16px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .footer {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
