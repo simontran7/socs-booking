@@ -116,7 +116,7 @@ const Login: React.FC = () => {
               </p>
 
               <form className="user-form-card" onSubmit={handleSubmit}>
-                <label>Email</label>
+                <label>Email Address</label>
                 <input
                   type="email"
                   placeholder="you@mail.mcgill.ca"
