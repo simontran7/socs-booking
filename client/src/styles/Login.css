@@ -259,6 +259,13 @@ img {
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-submit-btn:hover {
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
 }
 
 .user-footer-note {

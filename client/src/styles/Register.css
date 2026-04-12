@@ -266,6 +266,13 @@ img {
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-submit-btn:hover {
+  background-color: #000000;
+  color: #ffffff;
+  border: 1px solid #000000;
 }
 
 .user-footer {
@@ -276,6 +283,11 @@ img {
   color: #8c8c8c;
 }
 
+.red-text {
+  color: #d61f2c;
+  font-weight: 700;
+  cursor: pointer;
+}
 @media (max-width: 950px) {
   .user-main {
     grid-template-columns: 1fr;
