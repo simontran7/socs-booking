@@ -151,7 +151,7 @@ const Register: React.FC = () => {
                     onChange={(e) => setAgreed(e.target.checked)}
                   />
                   <span>
-                    I agree to the <span className="red-text">terms of use</span> 
+                    I agree to the <span className="red-text">terms of use </span> 
                      and confirm this is my Mcgill account.
                   </span>
                 </label>
