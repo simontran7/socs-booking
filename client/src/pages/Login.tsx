@@ -130,6 +130,9 @@ const Login: React.FC = () => {
             </div>
           </section>
         </main>
+         <footer className="user-footer">
+          © 2026 McGill University · School of Computer Science
+        </footer>
       </div>
     </div>
   );
