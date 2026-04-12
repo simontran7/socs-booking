@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "../styles/Home.css";
 
 const HomePage: React.FC = () => {
@@ -35,8 +36,8 @@ const HomePage: React.FC = () => {
 
           <nav className="navbar-links">
             <a href="/">Home</a>
-            <a href="#">Login</a>
-            <a href="#">Register</a>
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
           </nav>
         </header>
 
@@ -59,8 +60,12 @@ const HomePage: React.FC = () => {
               </p>
 
               <div className="home-buttons">
-                <button>Get Started</button>
-                <button>Browse Slots</button>
+                <Link to="/register">
+                    <button>Get Started</button>
+                </Link>
+                <Link to="login">
+                    <button>Browse Slots</button>
+                </Link>
               </div>
             </div>
 
