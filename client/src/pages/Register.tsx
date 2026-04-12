@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "../styles/User.css";
+import "../styles/Register.css";
 
 const Register: React.FC = () => {
   const [firstName, setFirstName] = useState("");
