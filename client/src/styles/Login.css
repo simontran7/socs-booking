@@ -275,6 +275,28 @@ img {
   color: #8c8c8c;
 }
 
+.user-input-note {
+  margin-top: 4px;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+  color: #b0b0b0;
+}
+
+.forgot-password {
+  margin-top: 4px;
+  margin-bottom: 12px;
+  text-align: right;
+  color: #d61f2c;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.user-footer-note {
+  margin-top: 24px;
+  font-size: 1rem;
+  color: #222222;
+}
+
 @media (max-width: 950px) {
   .user-main {
     grid-template-columns: 1fr;

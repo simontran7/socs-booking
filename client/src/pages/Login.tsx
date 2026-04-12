@@ -50,7 +50,11 @@ const Login: React.FC = () => {
       <div className="user-container">
         <header className="user-navbar">
           <div className="user-navbar-left">
-            <img src="/mcgill-logo.png" className="user-navbar-logo" />
+            <img
+              src="/mcgill-logo.png"
+              alt="McGill logo"
+              className="user-navbar-logo"
+            />
             <span className="user-navbar-title">| SOCS Connect</span>
           </div>
 
@@ -62,6 +66,7 @@ const Login: React.FC = () => {
         </header>
 
         <main className="user-main">
+          {/* LEFT */}
           <section className="user-left">
             <h1>
               Welcome <br />
@@ -84,8 +89,12 @@ const Login: React.FC = () => {
                   </div>
 
                   <div className="slot-info">
-                    <div>{slot.name} · {slot.course}</div>
-                    <div>{slot.time} · {slot.type}</div>
+                    <div className="slot-name-course">
+                      {slot.name} · {slot.course}
+                    </div>
+                    <div className="slot-time-type">
+                      {slot.time} · {slot.type}
+                    </div>
                   </div>
 
                   <div className="slot-status open">{slot.status}</div>
@@ -100,9 +109,9 @@ const Login: React.FC = () => {
               <h2>Log into your account</h2>
 
               <p className="user-switch-text">
-                No account?{" "}
+                No account yet?{" "}
                 <Link to="/register" className="user-inline-link">
-                  Register →
+                  Register here →
                 </Link>
               </p>
 
@@ -115,6 +124,10 @@ const Login: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                 />
 
+                <p className="user-input-note">
+                  @mail.mcgill.ca or @mcgill.ca only
+                </p>
+
                 <label>Password</label>
                 <input
                   type="password"
@@ -123,14 +136,21 @@ const Login: React.FC = () => {
                   onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <button className="user-submit-btn">
+                <p className="forgot-password">Forgot password?</p>
+
+                <button type="submit" className="user-submit-btn">
                   Log in →
                 </button>
               </form>
+
+              <p className="user-footer-note">
+                McGill accounts only — no external email addresses.
+              </p>
             </div>
           </section>
         </main>
-         <footer className="user-footer">
+
+        <footer className="user-footer">
           © 2026 McGill University · School of Computer Science
         </footer>
       </div>
