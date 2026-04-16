@@ -1,0 +1,279 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #dcdcdc;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.page {
+  min-height: 100vh;
+  background-color: #dddddd;
+}
+
+.page-container {
+  width: 100%;
+  margin: 0 auto;
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex; 
+  flex-direction: column;
+}
+
+main { 
+    flex: 1; 
+}
+
+.navbar {
+  height: 94px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 32px;
+  background-color: #f5f5f5;
+  border: 1px solid #bfbfbf; 
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.navbar-logo {
+  height: 62px;
+  width: auto;
+  object-fit: contain;
+}
+
+.navbar-title {
+  font-size: 22px;
+  color: #8a8080;
+  font-weight: 700;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 32px;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #111111;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.navbar-links a:hover {
+  text-decoration: underline;
+}
+
+.home-title {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch; 
+}
+
+.home-text {
+  padding: 24px 24px 16px 24px;
+  background-color: #f3f3f3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.home-text h1 {
+  margin: 0;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1.18;
+  font-weight: 800;
+  color: #000000;
+  text-align: left; 
+}
+
+.red-text {
+  color: #d61f2c;
+}
+
+.home-text p {
+  margin-top: 18px;
+  margin-bottom: 18px;
+  font-size: 1.15rem; 
+  line-height: 1.4;
+  color: #222222;
+  max-width: 500px;
+}
+
+.home-buttons {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.home-buttons button {
+  min-width: 205px;
+  padding: 16px 20px;
+  border-radius: 14px;
+  border: 1px solid #bdbdbd;
+  background-color: #f8f8f8;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease; 
+}
+
+.home-buttons button:hover {
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.home-image {
+  background-color: #f3f3f3;
+  min-height: 560px;
+}
+
+.home-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0 0 0 12px; 
+}
+
+.features-section {
+  background-color: #dddddd;
+  padding: 8px 30px 22px 30px;
+}
+
+.features-section h2 {
+  margin: 0 0 18px 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #111111;
+}
+
+.features-grid {
+  display: flex;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.feature-card {
+  background-color: #f4f4f4;
+  border-radius: 16px;
+  width: 245px;
+  min-height: auto;
+  padding: 20px;
+}
+
+.feature-number {
+  font-size: 38px;
+  font-weight: 800;
+  color: #b9b9b9;
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.feature-title {
+  font-size: 16px;
+  font-weight: 400;
+  color: #1b1b1b;
+  margin-bottom: 10px;
+}
+
+.feature-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #909090;
+}
+
+.footer {
+  background-color: #f5f5f5;
+  border-top: 1px solid #d0d0d0;
+  padding: 14px 36px;
+  font-size: 15px;
+  color: #8c8c8c;
+}
+
+@media (max-width: 950px) {
+  .home-title {
+    grid-template-columns: 1fr;
+  }
+
+  .home-image {
+    min-height: 360px;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .feature-card { 
+    width: 100%; 
+  }
+}
+
+@media (max-width: 600px) {
+
+  .navbar {
+    height: auto; 
+    padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px; 
+  }
+
+  .navbar-left {
+    flex-wrap: wrap;
+  }
+
+  .navbar-title {
+    font-size: 18px;
+  }
+
+  .navbar-links {
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+
+  .home-text {
+    padding: 20px 16px;
+  }
+
+  .home-txt h1 { 
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .home-text p {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+
+  .home-buttons {
+    flex-direction: column;
+  }
+
+  .home-buttons button {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .features-section {
+    padding: 12px 16px 20px 16px;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .footer {
+    padding: 12px 16px;
+  }
+}
