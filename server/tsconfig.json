@@ -16,7 +16,6 @@
     "noImplicitOverride": true,
     "noImplicitAny": true,
     "noUnusedLocals": true,
-    "noPropertyAccessFromIndexSignature": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "strict": true,

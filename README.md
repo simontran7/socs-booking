@@ -1,6 +1,8 @@
 # socs-booking
 
-## Development
+## Setup
+
+### Development
 
 Run:
 ```sh
@@ -19,7 +21,7 @@ cd ~/socs-booking/server/
 npm run dev
 ```
 
-## Production
+### Production
 
 ```
 git pull

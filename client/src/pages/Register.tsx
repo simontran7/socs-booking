@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 const Register: React.FC = () => {
   const [firstName, setFirstName] = useState("");
@@ -8,40 +10,38 @@ const Register: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("student");
-  const [agreed, setAgreed] = useState(false);
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    // prevent page reload on form submit, and reset any previous error
     e.preventDefault();
+    setError("");
 
-    console.log({
-      firstName,
-      lastName,
-      email,
-      password,
-      role,
-      agreed,
+    // send first name, last name, email and password to server
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ firstName, lastName, email, password }),
     });
+
+    // parse the response from the server (raw JSON text -> JavaScript object).
+    const data = await res.json();
+
+    // display the error returned by the server (if any)
+    if (!res.ok) {
+      setError(data.error || "Unexpected error. Sign up failed.");
+      return;
+    }
+
+    // redirect user to login page
+    navigate("/login");
   };
 
   return (
     <div className="user-page">
       <div className="user-container">
-        <header className="user-navbar">
-          <div className="user-navbar-left">
-            <img
-              src="/mcgill-logo.png"
-              alt="McGill logo"
-              className="user-navbar-logo"
-            />
-            <span className="user-navbar-title">| SOCS Connect</span>
-          </div>
-
-          <nav className="user-navbar-links">
-            <Link to="/">Home</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-          </nav>
-        </header>
+        <Navbar />
 
         <main className="user-main">
           <section className="user-left">
@@ -52,8 +52,7 @@ const Register: React.FC = () => {
             </h1>
 
             <p className="user-subtext">
-              Create your account and start booking office hours, requesting
-              meetings, and managing your schedule.
+              Join SOCS Connect to book or host office hours, request meetings, and coordinate group schedules.
             </p>
 
             <h3 className="user-side-heading">TWO TYPES OF ACCOUNTS</h3>
@@ -79,15 +78,7 @@ const Register: React.FC = () => {
 
           <section className="user-right">
             <div className="user-right-inner">
-              <p className="user-label-top">CREATE YOUR ACCOUNT</p>
-              <h2>Register your account</h2>
-
-              <p className="user-switch-text">
-                Already have an account?{" "}
-                <Link to="/login" className="user-inline-link">
-                  Login →
-                </Link>
-              </p>
+              <h2>Create an Account</h2>
 
               <form className="user-form-card" onSubmit={handleSubmit}>
                 <div className="name-row">
@@ -144,29 +135,24 @@ const Register: React.FC = () => {
                   </div>
                 </div>
 
-                <label className="checkbox-row">
-                  <input
-                    type="checkbox"
-                    checked={agreed}
-                    onChange={(e) => setAgreed(e.target.checked)}
-                  />
-                  <span>
-                    I agree to the <span className="red-text">terms of use </span> 
-                     and confirm this is my Mcgill account.
-                  </span>
-                </label>
+                {error && <p className="form-error">{error}</p>}
 
                 <button type="submit" className="user-submit-btn">
-                  Create account →
+                  Sign Up
                 </button>
               </form>
+
+              <p className="user-switch-text">
+                Already have an account?{" "}
+                <Link to="/login" className="user-inline-link">
+                  Sign In
+                </Link>
+              </p>
             </div>
           </section>
         </main>
 
-        <footer className="user-footer">
-          © 2026 McGill University · School of Computer Science
-        </footer>
+        <Footer />
       </div>
     </div>
   );

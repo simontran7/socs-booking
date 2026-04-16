@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Login.css";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 type Slot = {
   id: number;
@@ -16,6 +18,8 @@ type Slot = {
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const todaySlots: Slot[] = [
     {
@@ -40,30 +44,39 @@ const Login: React.FC = () => {
     },
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    // prevent page reload on form submit, and reset any previous error
     e.preventDefault();
-    console.log("Login:", { email, password });
+    setError("");
+
+    // send email and password to server
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+
+    // parse the response from the server (raw JSON text -> JavaScript object).
+    const data = await res.json();
+
+    // display the error returned by the server (if any)
+    if (!res.ok) {
+      setError(data.error || "Unexpected error. Sign in failed.");
+      return;
+    }
+
+    // store JWT token
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    // redirect user to the dashboard
+    navigate("/dashboard");
   };
 
   return (
     <div className="user-page">
       <div className="user-container">
-        <header className="user-navbar">
-          <div className="user-navbar-left">
-            <img
-              src="/mcgill-logo.png"
-              alt="McGill logo"
-              className="user-navbar-logo"
-            />
-            <span className="user-navbar-title">| SOCS Connect</span>
-          </div>
-
-          <nav className="user-navbar-links">
-            <Link to="/">Home</Link>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-          </nav>
-        </header>
+        <Navbar />
 
         <main className="user-main">
           <section className="user-left">
@@ -73,8 +86,9 @@ const Login: React.FC = () => {
               <span className="red-text">SOCS Connect.</span>
             </h1>
 
+
             <p className="user-subtext">
-              Log in to manage your schedule
+              Book or host office hours, request meetings, and manage appointments. All in one place.
             </p>
 
             <h3 className="user-side-heading">AVAILABLE TODAY</h3>
@@ -104,15 +118,7 @@ const Login: React.FC = () => {
 
           <section className="user-right">
             <div className="user-right-inner">
-              <p className="user-label-top">SIGN IN</p>
-              <h2>Log into your account</h2>
-
-              <p className="user-switch-text">
-                No account yet?{" "}
-                <Link to="/register" className="user-inline-link">
-                  Register here →
-                </Link>
-              </p>
+              <h2>Sign In</h2>
 
               <form className="user-form-card" onSubmit={handleSubmit}>
                 <label>Email Address</label>
@@ -124,34 +130,37 @@ const Login: React.FC = () => {
                 />
 
                 <p className="user-input-note">
-                  @mail.mcgill.ca or @mcgill.ca only
+                  Only email addresses with the domain names @mail.mcgill.ca or @mcgill.ca are valid.
                 </p>
 
                 <label>Password</label>
                 <input
                   type="password"
-                  placeholder="••••••"
+                  placeholder="••••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <p className="forgot-password">Forgot password?</p>
+                {error && <p className="form-error">{error}</p>}
 
                 <button type="submit" className="user-submit-btn">
-                  Log in →
+                  Sign In
                 </button>
               </form>
 
-              <p className="user-footer-note">
-                McGill accounts only — no external email addresses.
+              <p className="user-switch-text">
+                No account yet?{" "}
+                <Link to="/register" className="user-inline-link">
+                  Sign Up
+                </Link>
               </p>
+
+
             </div>
           </section>
         </main>
 
-        <footer className="user-footer">
-          © 2026 McGill University · School of Computer Science
-        </footer>
+        <Footer />
       </div>
     </div>
   );
