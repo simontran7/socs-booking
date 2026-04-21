@@ -111,11 +111,13 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     // send a response back with the JWT token,
     res.json({
         token,
-        // sends user data for simplicity's sake
+        // sending back the user's info so the client
+        // can display the first name and last name
+        // and know the user's role for authorization purposes
+        // without needing to decode the JWT token on the client side
         user: {
             firstName: user.firstName,
             lastName: user.lastName,
-            email: user.email,
             role: user.role,
         },
     });

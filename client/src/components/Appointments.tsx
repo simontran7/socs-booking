@@ -6,9 +6,8 @@ export default function Appointments() {
         <div className="appointments-box">
             <div className="appointments-header">
                 <h3>Upcoming Appointments</h3>
-                <a href="/appointments">View all →</a>
+                <a href="/appointments">View all</a>
             </div>
-
             <AppointmentRow />
             <AppointmentRow />
             <AppointmentRow />

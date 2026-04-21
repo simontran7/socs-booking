@@ -42,7 +42,6 @@ router.post("/", authenticateToken, requireOwner, async (req: AuthRequest, res: 
 // PATCH /api/slots/:id/publish
 router.patch("/:id/publish", authenticateToken, requireOwner, async (req: AuthRequest, res: Response): Promise<void> => {
     const slots = db.collection("slots");
-    // req id vs owner id difference confused
     const slot = await slots.findOne({ _id: new ObjectId(req.params["id"] as string) });
 
     // validate that the slot exists and belongs to the owner
@@ -51,7 +50,7 @@ router.patch("/:id/publish", authenticateToken, requireOwner, async (req: AuthRe
         return;
     }
 
-    // the slot's `ownerId` should match the `userId` from the JWT token (added to `req.user` in the authentication middleware)
+    // the slot's `ownerId` should match the `userId` from the JWT token
     if (slot.ownerId.toString() !== req.user!.userId) {
         res.status(403).json({ error: "You do not own this slot" });
         return;
@@ -68,19 +67,24 @@ router.delete("/:id", authenticateToken, requireOwner, async (req: AuthRequest, 
     const slots = db.collection("slots");
     const slot = await slots.findOne({ _id: new ObjectId(req.params["id"] as string) });
 
+    // validate that the slot exists
     if (!slot) {
         res.status(404).json({ error: "Slot not found" });
         return;
     }
 
+    // the slot's `ownerId` should match the `userId` from the JWT token
     if (slot.ownerId.toString() !== req.user!.userId) {
         res.status(403).json({ error: "You do not own this slot" });
         return;
     }
 
+    // delete the slot from the database
     await slots.deleteOne({ _id: new ObjectId(req.params["id"] as string) });
 
-    // return bookedBy so the frontend can send a mailto: notification to the user
+    // return `bookedBy` so the frontend can send a mailto: notification to the user notifying them that their slot was deleted (if the slot was booked by someone)
+    // `bookedBy` is an object that contains the `userId`, `name`, and `email` of the user who booked the slot (if any)
+    // this `bookedBy` field is set when a user books a slot (POST /api/slots/:id/book route handler)
     res.json({ message: "Slot deleted", bookedBy: slot.bookedBy });
 });
 
@@ -93,8 +97,8 @@ router.get("/", authenticateToken, async (_req: AuthRequest, res: Response): Pro
 });
 
 // owner sees all their own slots
-// GET /api/slots/mine
-router.get("/mine", authenticateToken, requireOwner, async (req: AuthRequest, res: Response): Promise<void> => {
+// GET /api/slots/created
+router.get("/created", authenticateToken, requireOwner, async (req: AuthRequest, res: Response): Promise<void> => {
     const slots = db.collection("slots");
     const mySlots = await slots.find({ ownerId: new ObjectId(req.user!.userId) }).toArray();
     res.json(mySlots);
@@ -106,11 +110,13 @@ router.post("/:id/book", authenticateToken, async (req: AuthRequest, res: Respon
     const slots = db.collection("slots");
     const slot = await slots.findOne({ _id: new ObjectId(req.params['id'] as string) });
 
+    // validate that the slot exists
     if (!slot) {
         res.status(404).json({ error: "Slot not found" });
         return;
     }
 
+    // validate that the slot is active and available for booking
     if (slot.status !== "active") {
         res.status(400).json({ error: "Slot is not available for booking" });
         return;
@@ -120,6 +126,7 @@ router.post("/:id/book", authenticateToken, async (req: AuthRequest, res: Respon
     const users = db.collection("users");
     const user = await users.findOne({ _id: new ObjectId(req.user!.userId) });
 
+    // update the slot's status to "booked" and set the `bookedBy` field to the user's info (userId, name, email)
     await slots.updateOne(
         { _id: new ObjectId(req.params["id"] as string) },
         {
@@ -143,11 +150,13 @@ router.delete("/:id/book", authenticateToken, async (req: AuthRequest, res: Resp
     const slots = db.collection("slots");
     const slot = await slots.findOne({ _id: new ObjectId(req.params["id"] as string) });
 
+    // validate that the slot exists
     if (!slot) {
         res.status(404).json({ error: "Slot not found" });
         return;
     }
 
+    // validate that the slot is currently booked by the user
     if (slot.bookedBy?.userId !== req.user!.userId) {
         res.status(403).json({ error: "You have not booked this slot" });
         return;
