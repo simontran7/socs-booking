@@ -1,6 +1,6 @@
 // wrapper around fetch that attaches the JWT token to every request
 // and redirects to /login if the token is expired or invalid (401)
-export async function apiFetch(url: string, options: RequestInit = {}): Promise<Response> {
+export async function authFetch(url: string, options: RequestInit = {}): Promise<Response> {
   const token = localStorage.getItem("token");
 
   const headers: Record<string, string> = {

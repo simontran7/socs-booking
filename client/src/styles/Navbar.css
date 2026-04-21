@@ -44,6 +44,26 @@
   text-decoration: underline;
 }
 
+.navbar-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+}
+
+.navbar-logout {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111111;
+  padding: 0;
+}
+
+.navbar-logout:hover {
+  text-decoration: underline;
+}
+
 @media (max-width: 600px) {
   .navbar {
     height: auto;

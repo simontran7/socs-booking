@@ -1,8 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Navbar.css";
 
 const Navbar: React.FC = () => {
+  const navigate = useNavigate();
+  const stored = localStorage.getItem("user");
+  const user = stored ? JSON.parse(stored) as { firstName: string; lastName: string; role: string } : null;
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
+  };
+
   return (
     <header className="navbar">
       <Link to="/" className="navbar-left">
@@ -12,8 +22,17 @@ const Navbar: React.FC = () => {
 
       <nav className="navbar-links">
         <Link to="/">Home</Link>
-        <Link to="/login">Sign In</Link>
-        <Link to="/register">Sign Up</Link>
+        {user ? (
+          <>
+            <span className="navbar-name">{user.firstName} {user.lastName}</span>
+            <button className="navbar-logout" onClick={handleLogout}>Sign Out</button>
+          </>
+        ) : (
+          <>
+            <Link to="/login">Sign In</Link>
+            <Link to="/register">Sign Up</Link>
+          </>
+        )}
       </nav>
     </header>
   );
