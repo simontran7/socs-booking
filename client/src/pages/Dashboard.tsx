@@ -8,6 +8,7 @@ import InfoConfirmed from "../components/Info-Confirmed";
 import Appointments from "../components/Appointments";
 import Calendar from "../components/Calendar";
 import { authFetch } from "../utils/fetch";
+import "../styles/Dashboard.css";
 
 const Dashboard: React.FC = () => {
   const [slots, setSlots] = useState([]);
@@ -27,18 +28,22 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="user-page">
+      <Navbar />
       <div className="user-container">
-        <Navbar />
-        <main>
           <Sidebar />
-          <InfoUpcomingAppointments />
-          <InfoPendingRequests />
-          <InfoConfirmed />
-          <Appointments slots={slots} />
-          <Calendar />
-        </main>
-        <Footer />
-      </div>
+          <div className="dashboard-content">
+            <div className="dashboard-info">
+              <InfoUpcomingAppointments />
+              <InfoPendingRequests />
+              <InfoConfirmed />
+            </div>
+            <div className="dashboard-main">
+              <Appointments slots={slots} />
+              <Calendar />
+            </div>
+          </div>
+        </div>
+      <Footer />
     </div>
   );
 };
