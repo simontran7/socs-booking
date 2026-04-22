@@ -24,6 +24,7 @@ const Navbar: React.FC = () => {
         <Link to="/">Home</Link>
         {user ? (
           <>
+            <Link to="/dashboard">Dashboard</Link>
             <span className="navbar-name">{user.firstName} {user.lastName}</span>
             <button className="navbar-logout" onClick={handleLogout}>Sign Out</button>
           </>

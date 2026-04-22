@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const HomePage: React.FC = () => {
+  const isLoggedIn = !!localStorage.getItem("token");
   const featureCards = [
     {
       number: "1",
@@ -50,7 +51,7 @@ const HomePage: React.FC = () => {
                 <Link to="/register">
                   <button>Get Started</button>
                 </Link>
-                <Link to="login">
+                <Link to={isLoggedIn ? "/dashboard" : "/login"}>
                   <button>Browse Slots</button>
                 </Link>
               </div>
