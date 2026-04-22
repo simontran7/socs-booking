@@ -23,7 +23,7 @@ npm run dev
 
 ### Production
 
-```
+```sh
 git pull
 
 # rebuild backend

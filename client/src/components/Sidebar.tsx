@@ -28,9 +28,6 @@ export default function Sidebar() {
                     My Appointments
                 </NavLink>
 
-                <div className="sidebar-link logout">
-                    Logout
-                </div>
             </nav>
         </div>
     );
