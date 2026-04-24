@@ -43,6 +43,62 @@ router.post("/", authenticateToken, requireOwner, async (req: AuthRequest, res: 
     res.status(201).json({ slotId: result.insertedId }); // `result.insertedId` is the ID of the newly inserted slot document
 });
 
+// owner creates recurring office hour slots (Type 3)
+// POST /api/slots/recurring
+router.post("/recurring", authenticateToken, requireOwner, async (req: AuthRequest, res: Response): Promise<void> => {
+    const { course, timeSlots, startDate, weeks } = req.body;
+
+    if (!course || !timeSlots || !startDate || !weeks) {
+        res.status(400).json({ error: "course, timeSlots, startDate, and weeks are required" });
+        return;
+    }
+
+    if (!Array.isArray(timeSlots) || timeSlots.length === 0) {
+        res.status(400).json({ error: "At least one time slot must be added" });
+        return;
+    }
+
+    const users = db.collection("users");
+    const owner = await users.findOne({ _id: new ObjectId(req.user!.userId) });
+    const ownerName = owner ? `${owner["firstName"]} ${owner["lastName"]}` : req.user!.email;
+
+    const slots = db.collection("slots");
+    const start = new Date(startDate + "T00:00:00Z");
+    const toInsert = [];
+
+    for (let d = 0; d < (weeks as number) * 7; d++) {
+        const date = new Date(start);
+        date.setUTCDate(date.getUTCDate() + d);
+        const dayOfWeek = date.getUTCDay();
+        const dateStr = date.toISOString().split("T")[0];
+
+        for (const { day, time } of timeSlots as { day: number; time: string }[]) {
+            if (day === dayOfWeek) {
+                toInsert.push({
+                    ownerId: new ObjectId(req.user!.userId),
+                    ownerEmail: req.user!.email,
+                    ownerName,
+                    course,
+                    date: dateStr,
+                    time,
+                    type: "Office Hours",
+                    status: "private",
+                    bookedBy: null,
+                    createdAt: new Date(),
+                });
+            }
+        }
+    }
+
+    if (toInsert.length === 0) {
+        res.status(400).json({ error: "No slots generated for the selected days and date range" });
+        return;
+    }
+
+    await slots.insertMany(toInsert);
+    res.status(201).json({ count: toInsert.length });
+});
+
 // owner makes a slot public so students can see and book it
 // PATCH /api/slots/:id/publish
 router.patch("/:id/publish", authenticateToken, requireOwner, async (req: AuthRequest, res: Response): Promise<void> => {
@@ -137,6 +193,12 @@ router.post("/:id/book", authenticateToken, async (req: AuthRequest, res: Respon
         return;
     }
 
+    // prevent self-booking
+    if (slot.ownerId.toString() === req.user!.userId) {
+        res.status(403).json({ error: "You cannot book your own slot" });
+        return;
+    }
+
     // get user's name from the database
     const users = db.collection("users");
     const user = await users.findOne({ _id: new ObjectId(req.user!.userId) });
@@ -190,8 +252,18 @@ router.delete("/:id/book", authenticateToken, async (req: AuthRequest, res: Resp
 // GET /api/slots/booked
 router.get("/booked", authenticateToken, async (req: AuthRequest, res: Response): Promise<void> => {
     const slots = db.collection("slots");
+    const users = db.collection("users");
     const bookedSlots = await slots.find({ "bookedBy.userId": req.user!.userId }).toArray();
-    res.json(bookedSlots);
+
+    const enriched = await Promise.all(bookedSlots.map(async (slot) => {
+        if (!slot["ownerName"]) {
+            const owner = await users.findOne({ _id: slot["ownerId"] });
+            if (owner) slot["ownerName"] = `${owner["firstName"]} ${owner["lastName"]}`;
+        }
+        return slot;
+    }));
+
+    res.json(enriched);
 });
 
 export default router;

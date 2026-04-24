@@ -2,6 +2,7 @@ import express, { type Request, type Response } from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import slotsRoutes from './routes/slots.js';
+import usersRoutes from './routes/users.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -18,6 +19,7 @@ app.use("/api/auth", authRoutes);
 
 // slot management routes (create, activate, delete, book, cancel)
 app.use("/api/slots", slotsRoutes);
+app.use("/api/users", usersRoutes);
 
 // catch-all (serve React's index.html for any non-API route)
 app.get('/{*path}', (_req: Request, res: Response): void => {

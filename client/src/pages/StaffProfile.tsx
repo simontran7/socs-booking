@@ -4,7 +4,6 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import { authFetch } from "../utils/fetch";
-import { formatTime } from "../utils/time";
 import type { Slot } from "../types";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
@@ -22,19 +21,21 @@ const StaffProfile: React.FC = () => {
   const fetchSlots = () => {
     authFetch("/api/slots")
       .then(r => r.json())
-      .then((all: Slot[]) => {
-        const filtered = all.filter(s => s.ownerId === ownerId);
-        setSlots(filtered);
-        if (filtered.length > 0) setOwnerName(filtered[0].ownerName || filtered[0].ownerEmail);
-      });
+      .then((all: Slot[]) => setSlots(all.filter(s => s.ownerId === ownerId)));
   };
 
-  useEffect(() => { fetchSlots(); }, [ownerId]);
+  useEffect(() => {
+    fetchSlots();
+    authFetch(`/api/users/${ownerId}`)
+      .then(r => r.json())
+      .then(data => { if (data.name) setOwnerName(data.name); });
+  }, [ownerId]);
 
   const handleBook = async (slot: Slot) => {
     setError("");
     const res = await authFetch(`/api/slots/${slot._id}/book`, { method: "POST" });
     if (res.ok) {
+      window.location.href = `mailto:${slot.ownerEmail}?subject=New Booking&body=Hi, your slot for ${slot.course} on ${slot.date} at ${slot.time} has been booked.`;
       navigate("/dashboard");
     } else {
       const data = await res.json();
@@ -69,7 +70,7 @@ const StaffProfile: React.FC = () => {
                     </div>
                     <div className="appointment-info" style={{ marginLeft: "12px" }}>
                       <div className="title">{slot.course.toUpperCase()} · {slot.type}</div>
-                      <div className="info">{formatTime(slot.time)}</div>
+                      <div className="info">{slot.time}</div>
                     </div>
                   </div>
                   <div className="grouped-actions">

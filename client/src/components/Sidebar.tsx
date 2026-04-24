@@ -23,6 +23,9 @@ export default function Sidebar() {
             Slots
           </NavLink>
         )}
+        <NavLink to="/appointments" className={getLinkClass}>
+          Appointments
+        </NavLink>
       </nav>
     </div>
   );

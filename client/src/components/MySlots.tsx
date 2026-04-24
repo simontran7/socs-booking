@@ -1,6 +1,5 @@
 import "../styles/RowBox.css";
 import type { Slot } from "../types";
-import { formatTime } from "../utils/time";
 
 type Props = { slots: Slot[] };
 
@@ -27,7 +26,7 @@ export default function MySlots(props: Props) {
               </div>
               <div className="appointment-info" style={{ marginLeft: "12px" }}>
                 <div className="title">{slot.course.toUpperCase()} · {slot.type}</div>
-                <div className="info">{formatTime(slot.time)}</div>
+                <div className="info">{slot.time}</div>
               </div>
             </div>
             <div className={`status ${slot.status}`}>{slot.status}</div>
