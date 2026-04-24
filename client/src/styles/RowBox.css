@@ -12,6 +12,11 @@
     color: #b9b9b9;
 }
 
+.outer-header h3 {
+    color: #d61f2c;
+    margin: 0;
+}
+
 .outer-header a {
     color: #d61f2c;
     text-decoration: none;
@@ -168,6 +173,6 @@
 }
 
 .status.pending {
-    background-color: #e8f0fe;
-    color: #4da3ff;
+    background-color: #fef9e0;
+    color: #b8860b;
 }

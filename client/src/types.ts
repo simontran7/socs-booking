@@ -1,4 +1,4 @@
-export type Slot = {
+interface BaseSlot {
   _id: string;
   ownerId: string;
   ownerName: string;
@@ -7,22 +7,16 @@ export type Slot = {
   date: string;
   time: string;
   type: string;
+  createdAt: string;
+}
+
+export type Slot = BaseSlot & {
   status: "private" | "active" | "booked";
   bookedBy: { userId: string; name: string; email: string } | null;
-  createdAt: string;
 };
 
-export type RequestSlot = {
-  _id: string;
-  ownerId: string;
-  ownerName: string;
-  ownerEmail: string;
-  course: string;
-  date: string;
-  time: string;
-  type: string;
+export type RequestSlot = BaseSlot & {
   status: "pending" | "denied" | "confirmed";
   createdBy: { userId: string; name: string; email: string };
-  createdAt: string;
   message: string;
-}
+};

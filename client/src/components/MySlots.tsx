@@ -27,8 +27,6 @@ export default function MySlots(props: Props) {
 
             <div className={`status ${slot.status}`}>{slot.status}</div>
             <div className="grouped-actions">
-              <button className="button blue">Edit</button>
-              <button className="button red">✕</button>
             </div>
           </div>
         );

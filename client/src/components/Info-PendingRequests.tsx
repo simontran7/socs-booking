@@ -7,9 +7,8 @@ type Props = {
 export default function InfoPendingRequests({ count }: Props) {
   return (
     <div className="info-card">
-      <div className="info-text">Requests</div>
       <div className="info-number">{count}</div>
-      <div className="info-text">pending</div>
+      <div className="info-text">Appointment Requests</div>
     </div>
   );
 }

@@ -8,7 +8,7 @@ export default function PendingRequests({ requests }: Props) {
   return (
     <div className="outer-box">
       <div className="outer-header">
-        <h3>Requests</h3>
+        <h3>Booking Requests</h3>
         <a href="/requests">View all</a>
       </div>
 

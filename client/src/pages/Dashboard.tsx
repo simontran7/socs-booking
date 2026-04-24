@@ -8,7 +8,6 @@ import InfoActiveSlots from "../components/Info-ActiveSlots";
 import type { RequestSlot } from "../types";
 import type { Slot } from "../types";
 import InfoPendingRequests from "../components/Info-PendingRequests";
-import InfoConfirmed from "../components/Info-Confirmed";
 import Appointments from "../components/Appointments";
 import Calendar from "../components/Calendar";
 import Requests from "../components/Requests";
@@ -35,7 +34,7 @@ const dummyRequests: RequestSlot[] = [
     },
     createdAt: new Date().toISOString(),
     message:
-      "Hi, I’m having trouble understanding the last assignment. Could we go over the reduction step together?",
+      "Hi, I'm having trouble understanding the last assignment. Could we go over the reduction step together?",
   },
   {
     _id: "req2",
@@ -58,59 +57,29 @@ const dummyRequests: RequestSlot[] = [
   },
 ];
 
-const dummySlots: Slot[] = [
-  {
-    _id: "slot1",
-    ownerId: "owner123",
-    ownerName: "Prof. Smith",
-    ownerEmail: "smith@mcgill.ca",
-    course: "COMP 307",
-    date: "2026-04-25",
-    time: "10:00-11:00",
-    type: "Recurring",
-    status: "active",
-    bookedBy: null,
-    createdAt: new Date().toISOString(),
-  },
-  {
-    _id: "slot2",
-    ownerId: "owner123",
-    ownerName: "Prof. Smith",
-    ownerEmail: "smith@mcgill.ca",
-    course: "COMP 307",
-    date: "2026-04-26",
-    time: "14:00-15:00",
-    type: "Single",
-    status: "booked",
-    bookedBy: {
-      userId: "user456",
-      name: "John Doe",
-      email: "john@example.com",
-    },
-    createdAt: new Date().toISOString(),
-  },
-];
-
 const Dashboard: React.FC = () => {
-  const [slots, setSlots] = useState([]);
+  const [bookedSlots, setBookedSlots] = useState<Slot[]>([]);
+  const [createdSlots, setCreatedSlots] = useState<Slot[]>([]);
   const storedUser = localStorage.getItem("user");
   const user = storedUser
     ? (JSON.parse(storedUser) as {
-        firstName: string;
-        lastName: string;
-        role: string;
-      })
+      firstName: string;
+      lastName: string;
+      role: string;
+    })
     : null;
 
   useEffect(() => {
-    const fetchSlots = async () => {
-      const endpoint =
-        user?.role === "owner" ? "/api/slots/created" : "/api/slots/booked";
-      const res = await authFetch(endpoint);
-      const data = await res.json();
-      setSlots(data);
+    const fetchAll = async () => {
+      const booked = await authFetch("/api/slots/booked");
+      setBookedSlots(await booked.json());
+
+      if (user?.role === "owner") {
+        const created = await authFetch("/api/slots/created");
+        setCreatedSlots(await created.json());
+      }
     };
-    fetchSlots();
+    fetchAll();
   }, []);
 
   return (
@@ -120,21 +89,25 @@ const Dashboard: React.FC = () => {
         <StudentSidebar />
         <div className="dashboard-content">
           <div className="dashboard-info">
-            <InfoUpcomingAppointments count={3} />
-            <InfoPendingRequests count={2} />
-            <InfoConfirmed count={1} />
+            <InfoUpcomingAppointments count={bookedSlots.length} />
+            <InfoPendingRequests count={0} />
+            {user?.role === "owner" && <InfoActiveSlots count={createdSlots.filter(s => s.status === "active").length} />}
           </div>
           <div className="dashboard-main">
-            <Appointments slots={slots} />
+            <Appointments slots={bookedSlots} />
             <Calendar />
           </div>
+          {user?.role === "owner" ? (
+            <>
+              <OwnerRequests requests={dummyRequests} />
+              <MySlots slots={createdSlots} />
+              <InviteLinkButton />
+            </>
+          ) : (
+            <Requests requests={dummyRequests} />
+          )}
         </div>
       </div>
-      <Requests requests={dummyRequests} />
-      <OwnerRequests requests={dummyRequests} />
-      <InfoActiveSlots count={3} />
-      <MySlots slots={dummySlots} />
-      <InviteLinkButton />
       <Footer />
     </div>
   );
