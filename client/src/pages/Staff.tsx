@@ -32,7 +32,7 @@ const Staff: React.FC = () => {
         <div className="dashboard-content">
           <div className="outer-box">
             <div className="outer-header">
-              <h3>Browse Staff</h3>
+              <h3>Staff</h3>
             </div>
             {ownerMap.size === 0 && <p style={{ color: "#b9b9b9" }}>No staff with active slots available.</p>}
             {[...ownerMap.entries()].map(([ownerId, owner]) => {

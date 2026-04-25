@@ -212,7 +212,7 @@ const ManageSlots: React.FC = () => {
 
           <div className="outer-box">
             <div className="outer-header">
-              <h3>My Slots</h3>
+              <h3>Slots with Me</h3>
             </div>
             {slots.length === 0 && <p style={{ color: "#b9b9b9" }}>No slots yet.</p>}
             {slots.map(slot => {

@@ -11,8 +11,6 @@ export default function Sidebar() {
 
   return (
     <div className="sidebar">
-      <div className="menu-label">MENU</div>
-
       <nav className="sidebar-nav">
         <NavLink to="/dashboard" className={getLinkClass}>
           Dashboard
@@ -20,11 +18,11 @@ export default function Sidebar() {
 
         {isOwner && (
           <NavLink to="/slots" className={getLinkClass}>
-            Slots
+            Slots with Me
           </NavLink>
         )}
         <NavLink to="/appointments" className={getLinkClass}>
-          Appointments
+          My Appointments
         </NavLink>
       </nav>
     </div>

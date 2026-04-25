@@ -10,7 +10,7 @@ export default function AppointmentRequests({ requests }: Props) {
       <div className="outer-header">
         <h3>Booking Requests</h3>
       </div>
-      {requests.length === 0 && <p style={{ color: "#b9b9b9" }}>No appointment requests.</p>}
+      {requests.length === 0 && <p style={{ color: "#b9b9b9" }}>N requests.</p>}
       {requests.map((request) => (
         <RequestRow key={request._id} request={request} />
       ))}

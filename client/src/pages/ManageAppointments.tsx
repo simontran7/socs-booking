@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
@@ -10,6 +11,7 @@ import "../styles/RowBox.css";
 const ManageAppointments: React.FC = () => {
   const [bookedSlots, setBookedSlots] = useState<Slot[]>([]);
   const [requests, setRequests] = useState<RequestSlot[]>([]);
+  const navigate = useNavigate();
 
   const fetchAll = async () => {
     const slotsRes = await authFetch("/api/slots/booked");
@@ -39,6 +41,16 @@ const ManageAppointments: React.FC = () => {
 
           <div className="outer-box">
             <div className="outer-header">
+              <h3>Book an Appointment</h3>
+            </div>
+            <p style={{ color: "#9a9a9a", marginBottom: "16px" }}>Browse available staff and book an appointment.</p>
+            <button className="button blue" style={{ width: "100%", height: "48px", fontSize: "16px" }} onClick={() => navigate("/staff")}>
+              Browse Staff
+            </button>
+          </div>
+
+          <div className="outer-box">
+            <div className="outer-header">
               <h3>My Appointments</h3>
             </div>
             {bookedSlots.length === 0 && <p style={{ color: "#b9b9b9" }}>No booked appointments.</p>}
@@ -61,7 +73,7 @@ const ManageAppointments: React.FC = () => {
                   <div className="grouped-actions">
                     <a href={`mailto:${slot.ownerEmail}`} className="button blue" style={{ textDecoration: "none" }}>✉</a>
                     <button className="button red" onClick={() => handleCancel(slot)}>
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4h6v2" /></svg>
                     </button>
                   </div>
                 </div>
@@ -71,9 +83,23 @@ const ManageAppointments: React.FC = () => {
 
           <div className="outer-box">
             <div className="outer-header">
-              <h3>Booking Requests</h3>
+              <h3>My Requests</h3>
             </div>
-            {requests.length === 0 && <p style={{ color: "#b9b9b9" }}>No booking requests.</p>}
+            {requests.length === 0 && <p style={{ color: "#b9b9b9" }}>No sent appointment requests.</p>}
+            {requests.map(req => (
+              <div key={req._id} className="slot-row">
+                <div className="row-left">
+                  <div className="appointment-info">
+                    <div className="title">{req.ownerName} · {req.course.toUpperCase()}</div>
+                    <div className="info">{req.message}</div>
+                  </div>
+                </div>
+                <div className="grouped-actions">
+                  <div className={`status ${req.status}`}>{req.status}</div>
+                  <a href={`mailto:${req.ownerEmail}`} className="button blue" style={{ textDecoration: "none" }}>✉</a>
+                </div>
+              </div>
+            ))}
           </div>
 
         </div>
