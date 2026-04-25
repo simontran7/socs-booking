@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -13,21 +13,21 @@ const ManageAppointments: React.FC = () => {
   const [requests, setRequests] = useState<RequestSlot[]>([]);
   const navigate = useNavigate();
 
-  const fetchAll = async () => {
+  const fetchAll = useCallback(async () => {
     const slotsRes = await authFetch("/api/slots/booked");
     setBookedSlots(await slotsRes.json());
 
     const reqRes = await authFetch("/api/requests");
     if (reqRes.ok) setRequests(await reqRes.json());
-  };
+  }, []);
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   const handleCancel = async (slot: Slot) => {
     const res = await authFetch(`/api/slots/${slot._id}/book`, { method: "DELETE" });
     const data = await res.json();
     if (data.ownerEmail) {
-      window.location.href = `mailto:${data.ownerEmail}?subject=Booking Cancelled&body=Hi, I have cancelled my booking for ${slot.course} on ${slot.date} at ${slot.time}.`;
+      window.location.assign(`mailto:${data.ownerEmail}?subject=Booking Cancelled&body=Hi, I have cancelled my booking for ${slot.course} on ${slot.date} at ${slot.time}.`);
     }
     fetchAll();
   };
@@ -43,7 +43,6 @@ const ManageAppointments: React.FC = () => {
             <div className="outer-header">
               <h3>Book an Appointment</h3>
             </div>
-            <p style={{ color: "#9a9a9a", marginBottom: "16px" }}>Browse available staff and book an appointment.</p>
             <button className="button blue" style={{ width: "100%", height: "48px", fontSize: "16px" }} onClick={() => navigate("/staff")}>
               Browse Staff
             </button>
@@ -71,8 +70,8 @@ const ManageAppointments: React.FC = () => {
                     </div>
                   </div>
                   <div className="grouped-actions">
-                    <a href={`mailto:${slot.ownerEmail}`} className="button blue" style={{ textDecoration: "none" }}>✉</a>
-                    <button className="button red" onClick={() => handleCancel(slot)}>
+                    <a href={`mailto:${slot.ownerEmail}`} className="button icon-btn blue" style={{ textDecoration: "none" }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></a>
+                    <button className="button icon-btn red" onClick={() => handleCancel(slot)}>
                       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4h6v2" /></svg>
                     </button>
                   </div>
@@ -96,7 +95,7 @@ const ManageAppointments: React.FC = () => {
                 </div>
                 <div className="grouped-actions">
                   <div className={`status ${req.status}`}>{req.status}</div>
-                  <a href={`mailto:${req.ownerEmail}`} className="button blue" style={{ textDecoration: "none" }}>✉</a>
+                  <a href={`mailto:${req.ownerEmail}`} className="button icon-btn blue" style={{ textDecoration: "none" }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="2" y="4" width="20" height="16" rx="2" /><polyline points="2,4 12,13 22,4" /></svg></a>
                 </div>
               </div>
             ))}

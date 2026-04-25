@@ -101,9 +101,6 @@
 }
 
 .button {
-    width: 72px;
-    aspect-ratio: 48 / 36;
-    border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -112,6 +109,18 @@
     background-color: #ffffff;
     transition: 0.2s ease;
     color: #000000;
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    font-size: 18px;
 }
 
 .big-button {

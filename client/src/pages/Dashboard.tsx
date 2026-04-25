@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import MySlots from "../components/MySlots";
 import type { Slot } from "../types";
 import Appointments from "../components/Appointments";
-import BookAppointment from "../components/BookAppointment";
 import MySessions from "../components/MySessions";
 import { authFetch } from "../utils/fetch";
 import "../styles/Dashboard.css";
@@ -19,26 +18,20 @@ const Dashboard: React.FC = () => {
     ? (JSON.parse(storedUser) as { userId: string; firstName: string; lastName: string; role: string })
     : null;
 
-  const fetchAll = async () => {
+  const role = user?.role;
+
+  const fetchAll = useCallback(async () => {
     const booked = await authFetch("/api/slots/booked");
     setBookedSlots(await booked.json());
 
-    if (user?.role === "owner") {
+    if (role === "owner") {
       const created = await authFetch("/api/slots/created");
       setCreatedSlots(await created.json());
     }
-  };
+  }, [role]);
 
-  useEffect(() => { fetchAll(); }, []);
-
-  const handleCancel = async (slot: Slot) => {
-    const res = await authFetch(`/api/slots/${slot._id}/book`, { method: "DELETE" });
-    const data = await res.json();
-    if (data.ownerEmail) {
-      window.location.href = `mailto:${data.ownerEmail}?subject=Booking Cancelled&body=Hi, I have cancelled my booking for ${slot.course} on ${slot.date} at ${slot.time}.`;
-    }
-    fetchAll();
-  };
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { fetchAll(); }, [fetchAll]);
 
   return (
     <div className="user-page">
@@ -46,13 +39,13 @@ const Dashboard: React.FC = () => {
       <div className="dashboard-container">
         <Sidebar />
         <div className="dashboard-content">
-          <div className="dashboard-main">
+          <div className="dashboard-main" style={user?.role !== "owner" ? { gridTemplateColumns: "1fr" } : {}}>
             <div className="dashboard-left">
               <Appointments
                 slots={user?.role === "owner" ? [...createdSlots.filter(s => s.status === "booked"), ...bookedSlots] : bookedSlots}
                 currentUserId={user?.userId}
-                onCancel={handleCancel}
                 showManageAll={user?.role !== "owner"}
+                readonly
               />
             </div>
             <div className="dashboard-right">

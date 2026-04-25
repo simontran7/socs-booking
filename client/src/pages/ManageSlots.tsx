@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
-import OwnerRequests from "../components/OwnerRequests";
 import type { Slot } from "../types";
 import { authFetch } from "../utils/fetch";
 import { formatTime } from "../utils/time";
@@ -13,12 +12,6 @@ const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const ManageSlots: React.FC = () => {
   const [slots, setSlots] = useState<Slot[]>([]);
-  const [course, setCourse] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [type, setType] = useState("Office Hours");
-  const [error, setError] = useState("");
-
   const [rCourse, setRCourse] = useState("");
   const [rTimeSlots, setRTimeSlots] = useState<{ day: number; time: string }[]>([]);
   const [rDay, setRDay] = useState(1);
@@ -28,34 +21,14 @@ const ManageSlots: React.FC = () => {
   const [rError, setRError] = useState("");
   const [rSuccess, setRSuccess] = useState("");
 
-  const fetchSlots = async () => {
+  const fetchSlots = useCallback(async () => {
     const res = await authFetch("/api/slots/created");
     const data = await res.json();
     setSlots(data);
-  };
-
-  useEffect(() => {
-    fetchSlots();
   }, []);
 
-  const handleCreate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    const res = await authFetch("/api/slots", {
-      method: "POST",
-      body: JSON.stringify({ course: `COMP ${course}`, date, time: formatTime(time), type }),
-    });
-    if (!res.ok) {
-      const data = await res.json();
-      setError(data.error || "Failed to create slot");
-      return;
-    }
-    setCourse("");
-    setDate("");
-    setTime("");
-    setType("Office Hours");
-    fetchSlots();
-  };
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { fetchSlots(); }, [fetchSlots]);
 
   const handleAddTimeSlot = () => {
     if (!rAddTime) return;
@@ -93,7 +66,7 @@ const ManageSlots: React.FC = () => {
     const res = await authFetch(`/api/slots/${slot._id}`, { method: "DELETE" });
     const data = await res.json();
     if (data.bookedBy) {
-      window.location.href = `mailto:${data.bookedBy.email}?subject=Slot Cancelled&body=Your booking for ${slot.course} on ${slot.date} at ${slot.time} has been cancelled.`;
+      window.location.assign(`mailto:${data.bookedBy.email}?subject=Slot Cancelled&body=Your booking for ${slot.course} on ${slot.date} at ${slot.time} has been cancelled.`);
     }
     fetchSlots();
   };
@@ -104,46 +77,6 @@ const ManageSlots: React.FC = () => {
       <div className="dashboard-container">
         <Sidebar />
         <div className="dashboard-content">
-
-          <div className="outer-box">
-            <div className="outer-header">
-              <h3>Create Slot</h3>
-            </div>
-            <form onSubmit={handleCreate} style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "flex-end" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <label>Course</label>
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                  <span style={{ fontWeight: 600 }}>COMP</span>
-                  <input
-                    value={course}
-                    onChange={e => setCourse(e.target.value.replace(/\D/g, "").slice(0, 3))}
-                    placeholder="307"
-                    maxLength={3}
-                    style={{ width: "60px" }}
-                    required
-                  />
-                </div>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <label>Date</label>
-                <input type="date" value={date} onChange={e => setDate(e.target.value)} required />
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <label>Time</label>
-                <input type="time" value={time} onChange={e => setTime(e.target.value)} required />
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                <label>Type</label>
-                <select value={type} onChange={e => setType(e.target.value)}>
-                  <option>Office Hours</option>
-                  <option>1-on-1</option>
-                  <option>Group Meeting</option>
-                </select>
-              </div>
-              {error && <p style={{ color: "#d61f2c", margin: 0 }}>{error}</p>}
-              <button type="submit" className="button">Create</button>
-            </form>
-          </div>
 
           <div className="outer-box">
             <div className="outer-header">
@@ -244,18 +177,17 @@ const ManageSlots: React.FC = () => {
                       {slot.status === "booked" && <option value="booked">Booked</option>}
                     </select>
                     {slot.bookedBy && (
-                      <a href={`mailto:${slot.bookedBy.email}`} className="button blue" style={{ textDecoration: "none" }}>✉</a>
+                      <a href={`mailto:${slot.bookedBy.email}`} className="button icon-btn blue" style={{ textDecoration: "none" }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></a>
                     )}
-                    <button className="button red" onClick={() => handleDelete(slot)}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4h6v2" /></svg></button>
+                    <button className="button icon-btn red" onClick={() => handleDelete(slot)}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4h6v2" /></svg></button>
                   </div>
                 </div>
               );
             })}
           </div>
 
-          <OwnerRequests requests={[]} />
 
-        </div>
+</div>
       </div>
       <Footer />
     </div>

@@ -4,17 +4,6 @@ import "../styles/Login.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-type Slot = {
-  id: number;
-  month: string;
-  day: string;
-  name: string;
-  course: string;
-  time: string;
-  type: string;
-  status: string;
-};
-
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,30 +18,7 @@ const Login: React.FC = () => {
     if (token) {
       navigate("/dashboard", { replace: true });
     }
-  }, []);
-
-  const todaySlots: Slot[] = [
-    {
-      id: 1,
-      month: "APR",
-      day: "11",
-      name: "Prof. Vybihal",
-      course: "COMP 307",
-      time: "10:00 AM",
-      type: "Office Hours",
-      status: "Open",
-    },
-    {
-      id: 2,
-      month: "APR",
-      day: "11",
-      name: "TA Sarah A.",
-      course: "COMP 307",
-      time: "3:00 PM",
-      type: "Lab Help",
-      status: "Open",
-    },
-  ];
+  }, [navigate]);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     // prevent page reload on form submit, and reset any previous error
@@ -100,29 +66,6 @@ const Login: React.FC = () => {
               appointments. All in one place.
             </p>
 
-            <h3 className="user-side-heading">AVAILABLE TODAY</h3>
-
-            <div className="slot-list">
-              {todaySlots.map((slot) => (
-                <div className="slot-card" key={slot.id}>
-                  <div className="slot-date">
-                    <span className="slot-month">{slot.month}</span>
-                    <span className="slot-day">{slot.day}</span>
-                  </div>
-
-                  <div className="slot-info">
-                    <div className="slot-name-course">
-                      {slot.name} · {slot.course}
-                    </div>
-                    <div className="slot-time-type">
-                      {slot.time} · {slot.type}
-                    </div>
-                  </div>
-
-                  <div className="slot-status open">{slot.status}</div>
-                </div>
-              ))}
-            </div>
           </section>
 
           <section className="user-right">

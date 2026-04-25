@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -18,24 +18,24 @@ const StaffProfile: React.FC = () => {
   const storedUser = localStorage.getItem("user");
   const currentUser = storedUser ? JSON.parse(storedUser) as { userId: string } : null;
 
-  const fetchSlots = () => {
+  const fetchSlots = useCallback(() => {
     authFetch("/api/slots")
       .then(r => r.json())
       .then((all: Slot[]) => setSlots(all.filter(s => s.ownerId === ownerId)));
-  };
+  }, [ownerId]);
 
   useEffect(() => {
     fetchSlots();
     authFetch(`/api/users/${ownerId}`)
       .then(r => r.json())
       .then(data => { if (data.name) setOwnerName(data.name); });
-  }, [ownerId]);
+  }, [ownerId, fetchSlots]);
 
   const handleBook = async (slot: Slot) => {
     setError("");
     const res = await authFetch(`/api/slots/${slot._id}/book`, { method: "POST" });
     if (res.ok) {
-      window.location.href = `mailto:${slot.ownerEmail}?subject=New Booking&body=Hi, your slot for ${slot.course} on ${slot.date} at ${slot.time} has been booked.`;
+      window.location.assign(`mailto:${slot.ownerEmail}?subject=New Booking&body=Hi, your slot for ${slot.course} on ${slot.date} at ${slot.time} has been booked.`);
       navigate("/dashboard");
     } else {
       const data = await res.json();
