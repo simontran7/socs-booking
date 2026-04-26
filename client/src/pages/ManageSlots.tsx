@@ -25,7 +25,7 @@ const ManageSlots: React.FC = () => {
   const [rSuccess, setRSuccess] = useState("");
 
   const fetchSlots = useCallback(async () => {
-    const res = await authFetch("/api/slots/created");
+    const res = await authFetch("/api/oh/created");
     const data = await res.json();
     setSlots(data);
   }, []);
@@ -49,7 +49,7 @@ const ManageSlots: React.FC = () => {
       setRError("Add at least one time slot");
       return;
     }
-    const res = await authFetch("/api/slots/recurring", {
+    const res = await authFetch("/api/oh/recurring", {
       method: "POST",
       body: JSON.stringify({
         course: `COMP ${rCourse}`,
@@ -76,12 +76,12 @@ const ManageSlots: React.FC = () => {
   };
 
   const handleActivate = async (id: string) => {
-    await authFetch(`/api/slots/${id}/publish`, { method: "PATCH" });
+    await authFetch(`/api/oh/${id}/publish`, { method: "PATCH" });
     fetchSlots();
   };
 
   const handleDelete = async (slot: Slot) => {
-    const res = await authFetch(`/api/slots/${slot._id}`, { method: "DELETE" });
+    const res = await authFetch(`/api/oh/${slot._id}`, { method: "DELETE" });
     const data = await res.json();
     if (data.bookedBy) {
       window.location.assign(

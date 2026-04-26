@@ -68,6 +68,24 @@ router.post(
   }
 );
 
+// GET student's own sent requests
+router.get(
+  "/",
+  authenticateToken,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const user = req.user;
+    if (!user) {
+      res.status(401).json({ error: "Not logged in" });
+      return;
+    }
+    const requests = await db
+      .collection("requests")
+      .find({ "createdBy.userId": user.id })
+      .toArray();
+    res.json(requests);
+  }
+);
+
 // GET owner requests
 router.get(
   "/owner",
@@ -109,30 +127,10 @@ router.post(
         return;
     }
 
-    // updates request
     await db.collection("requests").updateOne(
       { _id: request["_id"] },
       { $set: { status: "confirmed" } }
     );
-
-    // creates booking slot
-    await db.collection("slots").insertOne({
-      ownerId: new ObjectId(request["ownerId"]),
-      ownerName: request["ownerName"],
-      ownerEmail: request["ownerEmail"],
-
-      course: request["course"],
-      date: request["date"],
-      time: request["time"],
-
-      type: "appointment",
-      status: "booked",
-
-      location: "TBD",
-
-      bookedBy: request["createdBy"],
-      createdAt: new Date(),
-    });
 
     res.json({ ok: true });
   }
@@ -149,6 +147,32 @@ router.post(
     );
 
     res.json({ ok: true });
+  }
+);
+
+// DELETE (cancel) a request — only the student who created it can cancel
+router.delete(
+  "/:id",
+  authenticateToken,
+  async (req: AuthRequest, res: Response): Promise<void> => {
+    const user = req.user;
+    if (!user) {
+      res.status(401).json({ error: "Not logged in" });
+      return;
+    }
+    const request = await db.collection("requests").findOne({
+      _id: new ObjectId(req.params["id"] as string),
+    });
+    if (!request) {
+      res.status(404).json({ error: "Request not found" });
+      return;
+    }
+    if (request["createdBy"].userId !== user.id) {
+      res.status(403).json({ error: "Not your request" });
+      return;
+    }
+    await db.collection("requests").deleteOne({ _id: request["_id"] });
+    res.json({ ok: true, ownerEmail: request["ownerEmail"], course: request["course"], date: request["date"], time: request["time"] });
   }
 );
 

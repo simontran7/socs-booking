@@ -43,7 +43,8 @@ const MeetingRequests = ({ onChange }: Input) => {
   return (
     <div className="outer-box">
       <div className="outer-header">
-        <h3>Requested Appointments</h3>
+        <h3>One-on-One Meetings</h3>
+        <a href="/meetings">Manage all</a>
       </div>
 
       {requests.length === 0 && (

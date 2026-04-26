@@ -3,16 +3,31 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import MySlots from "../components/MySlots";
-import type { Slot } from "../types";
+import type { Slot, RequestSlot } from "../types";
 import Appointments from "../components/Appointments";
 import MySessions from "../components/MySessions";
 import { authFetch } from "../utils/fetch";
 import "../styles/Dashboard.css";
 import MeetingRequests from "../components/MeetingRequests";
 
+const toSlot = (r: RequestSlot): Slot => ({
+  _id: r._id,
+  ownerId: r.ownerId,
+  ownerName: r.ownerName,
+  ownerEmail: r.ownerEmail,
+  course: r.course,
+  date: r.date,
+  time: r.time,
+  type: "1-on-1 Meeting",
+  status: "booked",
+  createdAt: r.createdAt,
+  bookedBy: { userId: r.createdBy.userId, name: r.createdBy.name, email: r.createdBy.email },
+});
+
 const Dashboard: React.FC = () => {
   const [bookedSlots, setBookedSlots] = useState<Slot[]>([]);
   const [createdSlots, setCreatedSlots] = useState<Slot[]>([]);
+  const [confirmedMeetings, setConfirmedMeetings] = useState<Slot[]>([]);
   const storedUser = localStorage.getItem("user");
   const user = storedUser
     ? (JSON.parse(storedUser) as {
@@ -26,12 +41,18 @@ const Dashboard: React.FC = () => {
   const role = user?.role;
 
   const fetchAll = useCallback(async () => {
-    const booked = await authFetch("/api/slots/booked");
+    const booked = await authFetch("/api/oh/booked");
     setBookedSlots(await booked.json());
 
     if (role === "owner") {
-      const created = await authFetch("/api/slots/created");
+      const created = await authFetch("/api/oh/created");
       setCreatedSlots(await created.json());
+    }
+
+    const reqRes = await authFetch(role === "owner" ? "/api/requests/owner" : "/api/requests");
+    if (reqRes.ok) {
+      const reqs: RequestSlot[] = await reqRes.json();
+      setConfirmedMeetings(reqs.filter((r) => r.status === "confirmed").map(toSlot));
     }
   }, [role]);
 
@@ -57,8 +78,9 @@ const Dashboard: React.FC = () => {
                     ? [
                         ...createdSlots.filter((s) => s.status === "booked"),
                         ...bookedSlots,
+                        ...confirmedMeetings,
                       ]
-                    : bookedSlots
+                    : [...bookedSlots, ...confirmedMeetings]
                 }
                 currentUserId={user?.id}
                 showManageAll={user?.role !== "owner"}
@@ -69,7 +91,7 @@ const Dashboard: React.FC = () => {
               {user?.role === "owner" ? (
                 <>
                   <MeetingRequests onChange={fetchAll} />
-                  <MySlots slots={createdSlots.filter((s) => s.type !== "appointment")} />
+                  <MySlots slots={createdSlots} />
                   <MySessions slots={bookedSlots} />
                 </>
               ) : null}

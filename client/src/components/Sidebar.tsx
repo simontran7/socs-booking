@@ -18,13 +18,23 @@ export default function Sidebar() {
         </NavLink>
 
         {isOwner && (
-          <NavLink to="/slots" className={getLinkClass}>
-            My Slots
+          <NavLink to="/oh" className={getLinkClass}>
+            Office Hours
           </NavLink>
         )}
         <NavLink to="/appointments" className={getLinkClass}>
           My Appointments
         </NavLink>
+        {isOwner && (
+          <NavLink to="/meetings" className={getLinkClass}>
+            One-on-One Meetings
+          </NavLink>
+        )}
+        {isOwner && (
+          <NavLink to="/gm" className={getLinkClass}>
+            Group Meetings
+          </NavLink>
+        )}
       </nav>
     </div>
   );

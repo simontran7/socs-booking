@@ -20,7 +20,7 @@ const Staff: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    authFetch("/api/slots")
+    authFetch("/api/oh")
       .then((r) => r.json())
       .then(setSlots);
   }, []);

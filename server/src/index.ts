@@ -18,8 +18,8 @@ app.use(express.static(path.join(__dirname, '../../client/dist'))); // serve the
 // authentication routes (register, login)
 app.use("/api/auth", authRoutes);
 
-// slot management routes (create, activate, delete, book, cancel)
-app.use("/api/slots", slotsRoutes);
+// office hours slot management routes (create, activate, delete, book, cancel)
+app.use("/api/oh", slotsRoutes);
 app.use("/api/users", usersRoutes);
 
 app.use("/api/requests", requestRoutes);

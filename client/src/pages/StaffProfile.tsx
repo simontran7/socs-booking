@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import { authFetch } from "../utils/fetch";
+import { formatTime } from "../utils/time";
 import type { Slot } from "../types";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
@@ -25,7 +26,7 @@ const StaffProfile: React.FC = () => {
     : null;
 
   const fetchSlots = useCallback(() => {
-    authFetch("/api/slots")
+    authFetch("/api/oh")
       .then((r) => r.json())
       .then((all: Slot[]) =>
         setSlots(all.filter((s) => s.ownerId === ownerId)),
@@ -43,7 +44,7 @@ const StaffProfile: React.FC = () => {
 
   const handleBook = async (slot: Slot) => {
     setError("");
-    const res = await authFetch(`/api/slots/${slot._id}/book`, {
+    const res = await authFetch(`/api/oh/${slot._id}/book`, {
       method: "POST",
     });
     if (res.ok) {
@@ -69,7 +70,7 @@ const StaffProfile: React.FC = () => {
     ownerId,
     course,
     date,
-    time,
+    time: formatTime(time),
     message,
   }),
 });
@@ -100,7 +101,7 @@ const StaffProfile: React.FC = () => {
               <p style={{ color: "#ED1B2F", margin: "0 0 12px" }}>{error}</p>
             )}
             <div className="request-box">
-              <h3>Request a meeting</h3>
+              <h3>Book a One-on-One Meeting</h3>
 
               <input
                 placeholder="Course"
@@ -130,6 +131,7 @@ const StaffProfile: React.FC = () => {
                 Send Request
               </button>
             </div>
+            <h3 style={{ margin: "24px 0 12px" }}>Availability</h3>
             {slots.length === 0 && (
               <p style={{ color: "#b9b9b9" }}>No active slots available.</p>
             )}
