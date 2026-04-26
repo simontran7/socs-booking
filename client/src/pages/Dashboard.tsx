@@ -8,6 +8,7 @@ import Appointments from "../components/Appointments";
 import MySessions from "../components/MySessions";
 import { authFetch } from "../utils/fetch";
 import "../styles/Dashboard.css";
+import MeetingRequests from "../components/MeetingRequests";
 
 const Dashboard: React.FC = () => {
   const [bookedSlots, setBookedSlots] = useState<Slot[]>([]);
@@ -67,7 +68,8 @@ const Dashboard: React.FC = () => {
             <div className="dashboard-right">
               {user?.role === "owner" ? (
                 <>
-                  <MySlots slots={createdSlots} />
+                  <MeetingRequests onChange={fetchAll} />
+                  <MySlots slots={createdSlots.filter((s) => s.type !== "appointment")} />
                   <MySessions slots={bookedSlots} />
                 </>
               ) : null}
