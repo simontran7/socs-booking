@@ -251,3 +251,27 @@
   font-size: 14px;
   color: #333;
 }
+
+.request-box {
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 18px;
+}
+
+.request-box h3 {
+  margin-bottom: 12px;
+}
+
+.request-box input,
+.request-box textarea {
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.request-box textarea {
+  min-height: 80px;
+}

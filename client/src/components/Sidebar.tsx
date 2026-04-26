@@ -12,18 +12,29 @@ export default function Sidebar() {
   return (
     <div className="sidebar">
       <nav className="sidebar-nav">
+        <div className="menu-title">MENU</div>
         <NavLink to="/dashboard" className={getLinkClass}>
           Dashboard
         </NavLink>
 
         {isOwner && (
-          <NavLink to="/slots" className={getLinkClass}>
-            Slots with Me
+          <NavLink to="/oh" className={getLinkClass}>
+            Office Hours
           </NavLink>
         )}
         <NavLink to="/appointments" className={getLinkClass}>
           My Appointments
         </NavLink>
+        {isOwner && (
+          <NavLink to="/meetings" className={getLinkClass}>
+            One-on-One Meetings
+          </NavLink>
+        )}
+        {isOwner && (
+          <NavLink to="/gm" className={getLinkClass}>
+            Group Meetings
+          </NavLink>
+        )}
       </nav>
     </div>
   );

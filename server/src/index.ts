@@ -3,6 +3,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth.js';
 import slotsRoutes from './routes/slots.js';
 import usersRoutes from './routes/users.js';
+import requestRoutes from "./routes/req.js";
 import path from 'path';
 import { fileURLToPath } from 'url';
 import pollsRouter from "./routes/polls.js";
@@ -18,11 +19,12 @@ app.use(express.static(path.join(__dirname, '../../client/dist'))); // serve the
 // authentication routes (register, login)
 app.use("/api/auth", authRoutes);
 
-// slot management routes (create, activate, delete, book, cancel)
-app.use("/api/slots", slotsRoutes);
+// office hours slot management routes (create, activate, delete, book, cancel)
+app.use("/api/oh", slotsRoutes);
 app.use("/api/users", usersRoutes);
 
 app.use("/api/polls", pollsRouter);
+app.use("/api/requests", requestRoutes);
 
 // catch-all (serve React's index.html for any non-API route)
 app.get('/{*path}', (_req: Request, res: Response): void => {

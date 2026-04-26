@@ -24,7 +24,11 @@ npm run dev
 ### Production
 
 ```sh
-git pull
+ssh cs307-user@winter2026-comp307
+```
+
+```sh
+git pull origin main
 
 # rebuild backend
 cd ~/app/server/

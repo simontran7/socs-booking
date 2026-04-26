@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import { authFetch } from "../utils/fetch";
+import { formatTime } from "../utils/time";
 import type { Slot } from "../types";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
@@ -14,14 +15,18 @@ const StaffProfile: React.FC = () => {
   const [ownerName, setOwnerName] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const [course, setCourse] = useState("");
+  const [date, setDate] = useState("");
+  const [time, setTime] = useState("");
+  const [message, setMessage] = useState("");
 
   const storedUser = localStorage.getItem("user");
   const currentUser = storedUser
-    ? (JSON.parse(storedUser) as { id: string })
+    ? (JSON.parse(storedUser) as { userId: string })
     : null;
 
   const fetchSlots = useCallback(() => {
-    authFetch("/api/slots")
+    authFetch("/api/oh")
       .then((r) => r.json())
       .then((all: Slot[]) =>
         setSlots(all.filter((s) => s.ownerId === ownerId)),
@@ -39,7 +44,7 @@ const StaffProfile: React.FC = () => {
 
   const handleBook = async (slot: Slot) => {
     setError("");
-    const res = await authFetch(`/api/slots/${slot._id}/book`, {
+    const res = await authFetch(`/api/oh/${slot._id}/book`, {
       method: "POST",
     });
     if (res.ok) {
@@ -52,6 +57,34 @@ const StaffProfile: React.FC = () => {
       setError(data.error || "Failed to book slot");
     }
   };
+
+  const handleRequest = async () => {
+  setError("");
+
+  const res = await authFetch("/api/requests", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    ownerId,
+    course,
+    date,
+    time: formatTime(time),
+    message,
+  }),
+});
+
+  if (res.ok) {
+    window.location.assign(
+      `mailto:${slots[0]?.ownerEmail}?subject=Meeting Request&body=${message}`,
+    );
+    navigate("/dashboard");
+  } else {
+    const data = await res.json();
+    setError(data.error || "Failed to request meeting");
+  }
+};
 
   return (
     <div className="user-page">
@@ -67,6 +100,38 @@ const StaffProfile: React.FC = () => {
             {error && (
               <p style={{ color: "#ED1B2F", margin: "0 0 12px" }}>{error}</p>
             )}
+            <div className="request-box">
+              <h3>Book a One-on-One Meeting</h3>
+
+              <input
+                placeholder="Course"
+                value={course}
+                onChange={(e) => setCourse(e.target.value)}
+              />
+
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+              />
+
+              <input
+                type="time"
+                value={time}
+                onChange={(e) => setTime(e.target.value)}
+              />
+
+              <textarea
+                placeholder="Message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+
+              <button className="button green" onClick={handleRequest}>
+                Send Request
+              </button>
+            </div>
+            <h3 style={{ margin: "24px 0 12px" }}>Availability</h3>
             {slots.length === 0 && (
               <p style={{ color: "#b9b9b9" }}>No active slots available.</p>
             )}
@@ -76,7 +141,7 @@ const StaffProfile: React.FC = () => {
                 .toLocaleString("default", { month: "short" })
                 .toUpperCase();
               const day = date.getDate();
-              const isOwn = currentUser?.id === slot.ownerId;
+              const isOwn = currentUser?.userId === slot.ownerId;
               return (
                 <div key={slot._id} className="slot-row">
                   <div className="row-left">

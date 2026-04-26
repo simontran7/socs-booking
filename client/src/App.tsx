@@ -2,10 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 import ManageSlots from "./pages/ManageSlots";
 import ManageAppointments from "./pages/ManageAppointments";
+import Meetings from "./pages/Meetings";
+import GroupMeetings from "./pages/GroupMeetings";
 import Staff from "./pages/Staff";
 import StaffProfile from "./pages/StaffProfile";
 
@@ -25,7 +27,7 @@ function App() {
           }
         />
         <Route
-          path="/slots"
+          path="/oh"
           element={
             <ProtectedRoute>
               <ManageSlots />
@@ -37,6 +39,22 @@ function App() {
           element={
             <ProtectedRoute>
               <ManageAppointments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/meetings"
+          element={
+            <ProtectedRoute>
+              <Meetings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/gm"
+          element={
+            <ProtectedRoute>
+              <GroupMeetings />
             </ProtectedRoute>
           }
         />
