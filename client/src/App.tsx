@@ -2,12 +2,12 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 import ManageSlots from "./pages/ManageSlots";
 import ManageAppointments from "./pages/ManageAppointments";
 import Staff from "./pages/Staff";
-import StaffProfile from "./pages/StaffProfile";
+import StaffProfile  from "./pages/StaffProfile";
 
 function App() {
   return (
