@@ -19,7 +19,7 @@ router.post(
 
     // user student fetch
     const dbUser = await db.collection("users").findOne({
-      _id: new ObjectId(user.userId),
+      _id: new ObjectId(user.id),
     });
 
     if (!dbUser) {
@@ -50,7 +50,7 @@ router.post(
       status: "pending",
 
       createdBy: {
-        userId: user.userId,
+        userId: user.id,
         name: `${dbUser["firstName"]} ${dbUser["lastName"]}`,
         email: user.email,
       },
@@ -82,7 +82,7 @@ router.get(
 
     const requests = await db
       .collection("requests")
-      .find({ ownerId: user.userId })
+      .find({ ownerId: user.id })
       .toArray();
 
     res.json(requests);
