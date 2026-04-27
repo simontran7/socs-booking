@@ -1,18 +1,19 @@
 import { Router } from "express";
 import db from "../db.js";
 import { ObjectId } from "mongodb";
-import { authenticateToken } from "../middleware/auth.js";
+import { authenticateToken, type AuthRequest } from "../middleware/auth.js";
 
 const router = Router();
 router.use(authenticateToken);
 
-router.post("/", async (req, res) => {
+router.post("/", async (req: AuthRequest, res): Promise<void> => {
   try {
     const { course, slots } = req.body;
-    const user = (req as any).user;
+    const user = req.user;
 
     if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
+      res.status(401).json({ error: "Unauthorized" });
+      return;
     }
 
     const userId = user.id;
@@ -35,12 +36,11 @@ router.post("/", async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    console.log(err);
     res.status(500).json({ error: "Failed to create poll" });
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", async (req, res): Promise<void> => {
   try {
     const { ownerId } = req.query;
 
@@ -93,7 +93,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/:pollId/finalize", async (req, res) => {
+router.post("/:pollId/finalize", async (req, res): Promise<void> => {
   try {
     const { pollId } = req.params;
     const { slotId, recurring, weeks } = req.body;
@@ -103,32 +103,36 @@ router.post("/:pollId/finalize", async (req, res) => {
     });
  
     if (!slot) {
-      return res.status(404).json({ error: "Slot not found" });
+      res.status(404).json({ error: "Slot not found" });
+      return;
     }
- 
+
     const poll = await db.collection("polls").findOne({
       _id: new ObjectId(pollId),
     });
  
     if (!poll) {
-      return res.status(404).json({ error: "Poll not found" });
+      res.status(404).json({ error: "Poll not found" });
+      return;
     }
- 
+
     const owner = await db.collection("users").findOne({
       _id: new ObjectId(poll.ownerId),
     });
  
     if (!owner) {
-      return res.status(404).json({ error: "Owner not found" });
+      res.status(404).json({ error: "Owner not found" });
+      return;
     }
- 
+
     const votes = await db
       .collection("pollVotes")
       .find({ pollSlotId: slot._id.toString() })
       .toArray();
  
     if (votes.length === 0) {
-      return res.status(400).json({ error: "No votes for this slot" });
+      res.status(400).json({ error: "No votes for this slot" });
+      return;
     }
  
     const userIds = votes.map((v) => v.userId).filter(Boolean);
@@ -196,21 +200,23 @@ router.post("/:pollId/finalize", async (req, res) => {
   }
 });
 
-router.post("/:pollId/vote", async (req, res) => {
+router.post("/:pollId/vote", async (req: AuthRequest, res): Promise<void> => {
   try {
     const { pollId } = req.params;
     const { slotIds } = req.body;
 
-    const user = (req as any).user;
+    const user = req.user;
 
     if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
+      res.status(401).json({ error: "Unauthorized" });
+      return;
     }
 
     const userId = user.id;
 
     if (!Array.isArray(slotIds) || slotIds.length === 0) {
-      return res.status(400).json({ error: "No slots selected" });
+      res.status(400).json({ error: "No slots selected" });
+      return;
     }
 
     const votesCollection = db.collection("pollVotes");
@@ -221,7 +227,8 @@ router.post("/:pollId/vote", async (req, res) => {
     });
 
     if (pollAlreadyVoted) {
-      return res.status(400).json({ error: "You already voted on this poll" });
+      res.status(400).json({ error: "You already voted on this poll" });
+      return;
     }
 
     const newVotes = slotIds.map((slotId: string) => ({

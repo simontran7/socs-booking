@@ -11,7 +11,7 @@ import "../styles/RowBox.css";
 
 const capitalize = (name: string) => {
   if (!name) return "";
-  name
+  return name
     .split(" ")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(" ");
@@ -52,10 +52,8 @@ const DateBadge = ({ dateStr }: { dateStr: string }) => {
   const { month, day } = isoToMonthDay(dateStr);
   return (
     <div className="slot-row-date">
-      <span className="month">
-        {date.toLocaleString("default", { month: "short" }).toUpperCase()}
-      </span>
-      <span className="day">{date.getDate()}</span>
+      <span className="month">{month}</span>
+      <span className="day">{day || ""}</span>
     </div>
   );
 };

@@ -3,7 +3,7 @@ import db from "../db.js";
 
 const router = Router();
 
-router.get("/overview", async (req, res) => {
+router.get("/overview", async (_req, res) => {
   try {
     const staff = await db
       .collection("users")
