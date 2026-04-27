@@ -1,3 +1,4 @@
+// Simon
 export function displayTime(iso: string | undefined): string {
   if (!iso) return "";
   if (iso.includes("T")) {

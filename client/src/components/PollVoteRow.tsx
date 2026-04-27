@@ -1,3 +1,4 @@
+// Jeremy
 import { useState } from "react";
 import "../styles/RowBox.css";
 import { authFetch } from "../utils/fetch";
@@ -49,7 +50,7 @@ export default function PollVoteRow({ poll }: Props) {
     }
 
     const res = await authFetch(
-      `http://localhost:3000/api/polls/${poll._id}/vote`,
+      `/api/polls/${poll._id}/vote`,
       {
         method: "POST",
         body: JSON.stringify({

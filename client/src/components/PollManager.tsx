@@ -1,3 +1,4 @@
+// Jeremy
 import { useState, useEffect } from "react";
 import "../styles/RowBox.css";
 import { authFetch } from "../utils/fetch";
@@ -33,7 +34,7 @@ export default function PollManager() {
       if (!user) return;
 
       const res = await authFetch(
-        `http://localhost:3000/api/polls?ownerId=${user.id}`,
+        `/api/polls?ownerId=${user.id}`,
       );
 
       const data = await res.json();
@@ -63,7 +64,7 @@ export default function PollManager() {
       return;
     }
 
-    await authFetch(`http://localhost:3000/api/polls/${pollId}/finalize`, {
+    await authFetch(`/api/polls/${pollId}/finalize`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

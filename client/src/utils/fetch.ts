@@ -1,4 +1,4 @@
-// wrapper around fetch that attaches the JWT token to every request
+// Simon
 // and redirects to /login if the token is expired or invalid (401)
 export async function authFetch(
   url: string,

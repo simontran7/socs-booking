@@ -1,4 +1,5 @@
-import "../styles/InfoBox.css"; // (or better: Sidebar.css if you split later)
+// Jeremy
+import "../styles/InfoBox.css";
 
 type Props = {
   count: number;

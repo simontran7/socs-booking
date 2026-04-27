@@ -1,3 +1,4 @@
+// Jeremy
 import "../styles/InfoBox.css"; // (or better: Sidebar.css if you split later)
 
 type Props = {
