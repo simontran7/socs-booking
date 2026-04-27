@@ -14,11 +14,12 @@ const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const ManageSlots: React.FC = () => {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [rCourse, setRCourse] = useState("");
-  const [rTimeSlots, setRTimeSlots] = useState<{ day: number; time: string }[]>(
+  const [rTimeSlots, setRTimeSlots] = useState<{ day: number; time: string; endTime: string }[]>(
     [],
   );
   const [rDay, setRDay] = useState(1);
   const [rAddTime, setRAddTime] = useState("");
+  const [rAddEndTime, setRAddEndTime] = useState("");
   const [rStartDate, setRStartDate] = useState("");
   const [rWeeks, setRWeeks] = useState(1);
   const [rError, setRError] = useState("");
@@ -36,9 +37,10 @@ const ManageSlots: React.FC = () => {
   }, [fetchSlots]);
 
   const handleAddTimeSlot = () => {
-    if (!rAddTime) return;
-    setRTimeSlots((prev) => [...prev, { day: rDay, time: rAddTime }]);
+    if (!rAddTime || !rAddEndTime) return;
+    setRTimeSlots((prev) => [...prev, { day: rDay, time: rAddTime, endTime: rAddEndTime }]);
     setRAddTime("");
+    setRAddEndTime("");
   };
 
   const handleCreateRecurring = async (e: React.SyntheticEvent<HTMLFormElement>) => {
@@ -56,6 +58,7 @@ const ManageSlots: React.FC = () => {
         timeSlots: rTimeSlots.map((s) => ({
           day: s.day,
           time: formatTime(s.time),
+          endTime: formatTime(s.endTime),
         })),
         startDate: rStartDate,
         weeks: rWeeks,
@@ -70,6 +73,7 @@ const ManageSlots: React.FC = () => {
     setRCourse("");
     setRTimeSlots([]);
     setRAddTime("");
+    setRAddEndTime("");
     setRStartDate("");
     setRWeeks(1);
     fetchSlots();
@@ -150,11 +154,19 @@ const ManageSlots: React.FC = () => {
                   </select>
                 </div>
                 <div className="ms-field">
-                  <label>Time</label>
+                  <label>Start Time</label>
                   <input
                     type="time"
                     value={rAddTime}
                     onChange={(e) => setRAddTime(e.target.value)}
+                  />
+                </div>
+                <div className="ms-field">
+                  <label>End Time</label>
+                  <input
+                    type="time"
+                    value={rAddEndTime}
+                    onChange={(e) => setRAddEndTime(e.target.value)}
                   />
                 </div>
                 <button type="button" className="button" onClick={handleAddTimeSlot}>
@@ -166,7 +178,7 @@ const ManageSlots: React.FC = () => {
                 <div className="ms-pills">
                   {rTimeSlots.map((s, i) => (
                     <div key={i} className="button ms-pill">
-                      {DAYS[s.day]} {formatTime(s.time)}
+                      {DAYS[s.day]} {formatTime(s.time)} – {formatTime(s.endTime)}
                       <span
                         className="ms-pill-remove"
                         onClick={() => setRTimeSlots((prev) => prev.filter((_, j) => j !== i))}
@@ -208,7 +220,7 @@ const ManageSlots: React.FC = () => {
                           ? `${slot.bookedBy.name} · ${slot.course.toUpperCase()}`
                           : slot.course.toUpperCase()}
                       </div>
-                      <div className="info">{slot.time} · {slot.type}</div>
+                      <div className="info">{slot.time}{slot.endTime ? ` – ${slot.endTime}` : ""} · {slot.type}</div>
                     </div>
                   </div>
                   <div className="grouped-actions">

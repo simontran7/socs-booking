@@ -42,7 +42,7 @@ export default function AppointmentRow({
             {personName} · {slot.course.toUpperCase()}
           </div>
           <div className="info">
-            {slot.time} · {capitalize(slot.type)}
+            {slot.time}{slot.endTime ? ` – ${slot.endTime}` : ""} · {capitalize(slot.type)}
           </div>
         </div>
       </div>

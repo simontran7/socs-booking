@@ -72,7 +72,7 @@ router.post("/recurring", authenticateToken, requireOwner, async (req: AuthReque
         const dayOfWeek = date.getUTCDay();
         const dateStr = date.toISOString().split("T")[0];
 
-        for (const { day, time } of timeSlots as { day: number; time: string }[]) {
+        for (const { day, time, endTime } of timeSlots as { day: number; time: string; endTime?: string }[]) {
             if (day === dayOfWeek) {
                 toInsert.push({
                     ownerId: new ObjectId(req.user!.id),
@@ -81,6 +81,7 @@ router.post("/recurring", authenticateToken, requireOwner, async (req: AuthReque
                     course,
                     date: dateStr,
                     time,
+                    ...(endTime ? { endTime } : {}),
                     type: "Office Hours",
                     status: "private",
                     bookedBy: null,

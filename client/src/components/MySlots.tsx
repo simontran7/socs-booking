@@ -32,7 +32,7 @@ export default function MySlots(props: Props) {
                 <div className="title">
                   {slot.course.toUpperCase()} · {slot.type}
                 </div>
-                <div className="info">{slot.time}</div>
+                <div className="info">{slot.time}{slot.endTime ? ` – ${slot.endTime}` : ""}</div>
               </div>
             </div>
             <div className={`status ${slot.status}`}>{slot.status}</div>
