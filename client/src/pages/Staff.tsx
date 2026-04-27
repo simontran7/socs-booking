@@ -22,7 +22,6 @@ const capitalize = (name: string) => {
     .join(" ");
 };
 
-type Owner = { _id: string; name: string; email: string };
 
 const Staff: React.FC = () => {
   const [staff, setStaff] = useState<StaffView[]>([]);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { authFetch } from "../utils/fetch";
 import PollVoteRow from "./PollVoteRow";
 import "../styles/RowBox.css";
