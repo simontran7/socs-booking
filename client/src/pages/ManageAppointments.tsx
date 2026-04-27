@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import type { Slot, RequestSlot } from "../types";
 import { authFetch } from "../utils/fetch";
-import { displayTime, isoToMonthDay } from "../utils/time";
+import { displayTime } from "../utils/time";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
