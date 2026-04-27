@@ -28,11 +28,12 @@ export async function authFetch(
   // token is invalid or expired, log out the user and redirect to login page
   // checks if the response status is 401 (Unauthorized) because that's what's returned by the backend (see src/server/middleware/auth.ts)
   // when the token is invalid or expired
+  /*
   if (res.status === 401) {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     window.location.href = "/login";
-  }
+  }*/
 
   return res;
 }

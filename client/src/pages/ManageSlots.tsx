@@ -43,7 +43,9 @@ const ManageSlots: React.FC = () => {
     setRAddEndTime("");
   };
 
-  const handleCreateRecurring = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+  const handleCreateRecurring = async (
+    e: React.SyntheticEvent<HTMLFormElement>,
+  ) => {
     e.preventDefault();
     setRError("");
     setRSuccess("");
@@ -114,7 +116,9 @@ const ManageSlots: React.FC = () => {
                     <input
                       value={rCourse}
                       onChange={(e) =>
-                        setRCourse(e.target.value.replace(/\D/g, "").slice(0, 3))
+                        setRCourse(
+                          e.target.value.replace(/\D/g, "").slice(0, 3),
+                        )
                       }
                       placeholder="307"
                       maxLength={3}
@@ -147,9 +151,14 @@ const ManageSlots: React.FC = () => {
               <div className="ms-add-row">
                 <div className="ms-field">
                   <label>Day</label>
-                  <select value={rDay} onChange={(e) => setRDay(Number(e.target.value))}>
+                  <select
+                    value={rDay}
+                    onChange={(e) => setRDay(Number(e.target.value))}
+                  >
                     {DAYS.map((label, i) => (
-                      <option key={i} value={i}>{label}</option>
+                      <option key={i} value={i}>
+                        {label}
+                      </option>
                     ))}
                   </select>
                 </div>
@@ -181,7 +190,11 @@ const ManageSlots: React.FC = () => {
                       {DAYS[s.day]} {displayTime(s.time)} to {displayTime(s.endTime)}
                       <span
                         className="ms-pill-remove"
-                        onClick={() => setRTimeSlots((prev) => prev.filter((_, j) => j !== i))}
+                        onClick={() =>
+                          setRTimeSlots((prev) =>
+                            prev.filter((_, j) => j !== i),
+                          )
+                        }
                       >
                         ×
                       </span>
@@ -193,7 +206,9 @@ const ManageSlots: React.FC = () => {
               {rError && <p className="ms-feedback-error">{rError}</p>}
               {rSuccess && <p className="ms-feedback-success">{rSuccess}</p>}
               <div>
-                <button type="submit" className="button">Create</button>
+                <button type="submit" className="button">
+                  Create
+                </button>
               </div>
             </form>
           </div>
@@ -202,7 +217,9 @@ const ManageSlots: React.FC = () => {
             <div className="outer-header">
               <h3>Slots with Me</h3>
             </div>
-            {slots.length === 0 && <p style={{ color: "#b9b9b9" }}>No slots yet.</p>}
+            {slots.length === 0 && (
+              <p style={{ color: "#b9b9b9" }}>No slots yet.</p>
+            )}
             {slots.map((slot) => {
               const { month, day } = isoToMonthDay(slot.start);
               return (
@@ -212,7 +229,10 @@ const ManageSlots: React.FC = () => {
                       <span className="month">{month}</span>
                       <span className="day">{day}</span>
                     </div>
-                    <div className="appointment-info" style={{ marginLeft: "12px" }}>
+                    <div
+                      className="appointment-info"
+                      style={{ marginLeft: "12px" }}
+                    >
                       <div className="title">
                         {slot.bookedBy
                           ? `${slot.bookedBy.name} · ${slot.course.toUpperCase()}`
@@ -230,18 +250,41 @@ const ManageSlots: React.FC = () => {
                     >
                       <option value="private">Private</option>
                       <option value="active">Active</option>
-                      {slot.status === "booked" && <option value="booked">Booked</option>}
+                      {slot.status === "booked" && (
+                        <option value="booked">Booked</option>
+                      )}
                     </select>
                     {slot.bookedBy && (
-                      <a href={`mailto:${slot.bookedBy.email}`} className="button icon-btn blue" style={{ textDecoration: "none" }}>
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <a
+                        href={`mailto:${slot.bookedBy.email}`}
+                        className="button icon-btn blue"
+                        style={{ textDecoration: "none" }}
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                        >
                           <rect x="2" y="4" width="20" height="16" rx="2" />
                           <polyline points="2,4 12,13 22,4" />
                         </svg>
                       </a>
                     )}
-                    <button className="button icon-btn red" onClick={() => handleDelete(slot)}>
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <button
+                      className="button icon-btn red"
+                      onClick={() => handleDelete(slot)}
+                    >
+                      <svg
+                        width="15"
+                        height="15"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
                         <polyline points="3 6 5 6 21 6" />
                         <path d="M19 6l-1 14H6L5 6" />
                         <path d="M10 11v6" />

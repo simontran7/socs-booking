@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
+import PollDemoPage from "../components/PollDemoPage";
 import { authFetch } from "../utils/fetch";
 import { displayTime, isoToMonthDay } from "../utils/time";
 import type { Slot } from "../types";
@@ -59,7 +60,7 @@ const StaffProfile: React.FC = () => {
   };
 
   const handleRequest = async () => {
-  setError("");
+    setError("");
 
   const res = await authFetch("/api/requests", {
   method: "POST",
@@ -75,16 +76,16 @@ const StaffProfile: React.FC = () => {
   }),
 });
 
-  if (res.ok) {
-    window.location.assign(
-      `mailto:${slots[0]?.ownerEmail}?subject=Meeting Request&body=${message}`,
-    );
-    navigate("/dashboard");
-  } else {
-    const data = await res.json();
-    setError(data.error || "Failed to request meeting");
-  }
-};
+    if (res.ok) {
+      window.location.assign(
+        `mailto:${slots[0]?.ownerEmail}?subject=Meeting Request&body=${message}`,
+      );
+      navigate("/dashboard");
+    } else {
+      const data = await res.json();
+      setError(data.error || "Failed to request meeting");
+    }
+  };
 
   return (
     <div className="user-page">
@@ -169,6 +170,7 @@ const StaffProfile: React.FC = () => {
               );
             })}
           </div>
+          <PollDemoPage />
         </div>
       </div>
       <Footer />

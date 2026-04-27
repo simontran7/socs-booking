@@ -49,10 +49,14 @@ const Dashboard: React.FC = () => {
       setCreatedSlots(await created.json());
     }
 
-    const reqRes = await authFetch(role === "owner" ? "/api/requests/owner" : "/api/requests");
+    const reqRes = await authFetch(
+      role === "owner" ? "/api/requests/owner" : "/api/requests",
+    );
     if (reqRes.ok) {
       const reqs: RequestSlot[] = await reqRes.json();
-      setConfirmedMeetings(reqs.filter((r) => r.status === "confirmed").map(toSlot));
+      setConfirmedMeetings(
+        reqs.filter((r) => r.status === "confirmed").map(toSlot),
+      );
     }
   }, [role]);
 

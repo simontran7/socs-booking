@@ -220,8 +220,40 @@
 }
 
 .status.pending {
-  background-color: #fef9e0;
-  color: #b8860b;
+    background-color: #e8f0fe;
+    color: #4da3ff;
+}
+
+.poll-dropdown {
+    margin-top: 6px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-size: 14px;
+}
+
+.recurring-row {
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.recurring-input {
+    width: 100px;
+    padding: 4px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.poll-checkbox-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 4px 0;
+  font-size: 14px;
+  color: #333;
 }
 
 .request-box {

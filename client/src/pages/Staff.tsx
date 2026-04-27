@@ -7,6 +7,14 @@ import { authFetch } from "../utils/fetch";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
+type StaffView = {
+  ownerId: string;
+  ownerName: string;
+  ownerEmail: string;
+  slotCount: number;
+  pollCount: number;
+};
+
 const capitalize = (name: string) => {
   return name
     .split(" ")
@@ -17,48 +25,61 @@ const capitalize = (name: string) => {
 type Owner = { _id: string; name: string; email: string };
 
 const Staff: React.FC = () => {
-  const [owners, setOwners] = useState<Owner[]>([]);
+  const [staff, setStaff] = useState<StaffView[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    authFetch("/api/users")
+    authFetch("/api/staff/overview")
       .then((r) => r.json())
-      .then(setOwners);
+      .then(setStaff)
+      .catch((err) => console.error("Failed to load staff", err));
   }, []);
 
   return (
     <div className="user-page">
       <Navbar />
+
       <div className="dashboard-container">
         <Sidebar />
+
         <div className="dashboard-content">
           <div className="outer-box">
             <div className="outer-header">
               <h3>Staff</h3>
             </div>
-            {owners.length === 0 && (
+
+            {staff.length === 0 && (
               <p style={{ color: "#b9b9b9" }}>No staff available.</p>
             )}
-            {owners.map((owner) => {
-              const initials = owner.name
+
+            {staff.map((s) => {
+              const initials = s.ownerName
                 .split(" ")
                 .map((n) => n[0])
                 .join("")
                 .slice(0, 2)
                 .toUpperCase();
+
               return (
-                <div key={owner._id} className="inner-row">
+                <div key={s.ownerId} className="inner-row">
                   <div className="row-left">
                     <div className="navbar-icon">{initials}</div>
+
                     <div className="appointment-info">
-                      <div className="title">{capitalize(owner.name)}</div>
-                      <div className="info">{owner.email}</div>
+                      <div className="title">{capitalize(s.ownerName)}</div>
+
+                      <div className="info">
+                        {s.slotCount} active slot{s.slotCount !== 1 ? "s" : ""}{" "}
+                        · {s.pollCount} active poll
+                        {s.pollCount !== 1 ? "s" : ""}
+                      </div>
                     </div>
                   </div>
+
                   <div className="grouped-actions">
                     <button
                       className="button blue"
-                      onClick={() => navigate(`/staff/${owner._id}`)}
+                      onClick={() => navigate(`/staff/${s.ownerId}`)}
                     >
                       View
                     </button>
@@ -69,6 +90,7 @@ const Staff: React.FC = () => {
           </div>
         </div>
       </div>
+
       <Footer />
     </div>
   );
