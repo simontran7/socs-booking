@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import type { Slot, RequestSlot } from "../types";
 import { authFetch } from "../utils/fetch";
-import { displayTime } from "../utils/time";
+import { displayTime, isoToMonthDay } from "../utils/time";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
@@ -33,11 +33,11 @@ const TrashIcon = () => (
 );
 
 const DateBadge = ({ dateStr }: { dateStr: string }) => {
-  const date = new Date(dateStr);
+  const { month, day } = isoToMonthDay(dateStr);
   return (
     <div className="slot-row-date">
-      <span className="month">{date.toLocaleString("default", { month: "short" }).toUpperCase()}</span>
-      <span className="day">{date.getDate()}</span>
+      <span className="month">{month}</span>
+      <span className="day">{day || ""}</span>
     </div>
   );
 };
